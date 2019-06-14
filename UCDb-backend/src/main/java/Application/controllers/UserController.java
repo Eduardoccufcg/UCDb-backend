@@ -11,16 +11,20 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import Application.model.User;
+import Application.services.EmailService;
 import Application.services.UserService;
 
 @RestController
 @RequestMapping({"/v1/users"})
 public class UserController {
 	
+	private EmailService emailService;
 	private UserService userService;
 	
-	public UserController(UserService userService) {
+	public UserController(UserService userService, EmailService emailService) {
 		this.userService = userService;
+		this.emailService= emailService;
+		
 	}
 	
 	@GetMapping(value = "/{login}")
@@ -36,6 +40,7 @@ public class UserController {
 	@ResponseBody
 	public ResponseEntity<User> create(@RequestBody User user){
 		// Falta excecao de usuario ja existe.
+		this.emailService.send("<" + user.getEmail() + ">");
 		return new ResponseEntity<User>(this.userService.create(user),HttpStatus.CREATED);
 	}
 	
