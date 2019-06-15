@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import Application.exception.IncorrectPasswordException;
+import Application.exception.UserNotFoundException;
 import Application.model.LoginResponse;
 import Application.model.User;
 import Application.services.UserService;
@@ -31,11 +33,11 @@ public class LoginController {
 
 		// verificacoes
 		if (authUser == null) {
-			//throw new UserNotFoundException("Usuario nao encontrado!");
+			throw new UserNotFoundException("Usuario nao encontrado!");
 		}
 
 		if (!authUser.getPassword().equals(user.getPassword())) {
-			//throw new IncorrectPasswordException("Senha invalida!");
+			throw new IncorrectPasswordException("Senha invalida!");
 		}
 
 		String token = Jwts.builder().setSubject(authUser.getEmail()).signWith(SignatureAlgorithm.HS512, TOKEN_KEY)

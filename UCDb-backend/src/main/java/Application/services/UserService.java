@@ -3,6 +3,7 @@ package Application.services;
 
 import org.springframework.stereotype.Service;
 
+
 import Application.model.User;
 import Application.repositoriesDAO.UserDAO;
 
@@ -16,17 +17,13 @@ public class UserService {
 	}
 
 	public User create(User user) {
-		User u = this.userDAO.findByLogin(user.getEmail());
-
-		if (u != null) {
-			// exceção
-		}
 
 		return userDAO.save(user);
 
 	}
 
 	public User findByLogin(String login) {
+		
 		return this.userDAO.findByLogin(login);
 
 	}

@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import Application.exception.UserAlreadyExistsException;
+import Application.exception.UserNotFoundException;
 import Application.model.User;
 import Application.services.EmailService;
 import Application.services.UserService;
@@ -33,7 +35,7 @@ public class UserController {
 	public ResponseEntity<User> getUser(@PathVariable String email) {
 		User user = this.userService.findByLogin(email);
 		if (user == null) {
-			// not found
+			throw new UserNotFoundException("Usuário Inexistente");
 		}
 		return new ResponseEntity<User>(this.userService.findByLogin(email), HttpStatus.OK);
 	}
@@ -41,7 +43,10 @@ public class UserController {
 	@PostMapping(value = "/")
 	@ResponseBody
 	public ResponseEntity<User> create(@RequestBody User user) {
-		// Falta excecao de usuario ja existe.
+
+		if(this.userService.findByLogin(user.getEmail()) != null) {
+			throw new UserAlreadyExistsException("Usuário já cadastrado");
+		}
 		this.emailService.send("<" + user.getEmail() + ">");
 		return new ResponseEntity<User>(this.userService.create(user), HttpStatus.CREATED);
 	}

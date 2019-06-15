@@ -10,21 +10,24 @@ import Application.security.TokenFilter;
 
 @SpringBootApplication
 public class UCDbBackendApplication {
-
-	public static void main(String[] args) {
-		SpringApplication.run(UCDbBackendApplication.class, args);
-	}
-	
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Bean
 	public FilterRegistrationBean filterJwt() {
 		FilterRegistrationBean filterRb = new FilterRegistrationBean();
 		filterRb.setFilter(new TokenFilter());
+		filterRb.setEnabled(false);
+	
 		// Será usado para filtrar futuras rotas --> filterRb.addUrlPatterns("/private");
 		
 		return filterRb;
 
 	}
+	public static void main(String[] args) {
+		SpringApplication.run(UCDbBackendApplication.class, args);
+	}
+	
+	
+	
 
 }
