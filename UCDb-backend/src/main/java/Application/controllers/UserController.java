@@ -20,14 +20,14 @@ import Application.services.UserService;
 @RestController
 @RequestMapping({ "/v1/users" })
 public class UserController {
-
-	private EmailService emailService;
 	@Autowired
+	private EmailService emailService;
+	
 	private UserService userService;
 
-	public UserController(UserService userService, EmailService emailService) {
+	public UserController(UserService userService) {
 		this.userService = userService;
-		this.emailService = emailService;
+
 
 	}
 
