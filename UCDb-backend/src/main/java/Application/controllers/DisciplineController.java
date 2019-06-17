@@ -35,7 +35,7 @@ public class DisciplineController {
 	}
 
 	@SuppressWarnings({ "rawtypes" })
-	@GetMapping("/")
+	@GetMapping("/busca")
 	@ResponseBody
 	public ResponseEntity<List> getBySubstring(@RequestParam(name = "substring") String substring) {
 
