@@ -20,31 +20,29 @@ import io.jsonwebtoken.SignatureAlgorithm;
 @RequestMapping("/v1/auth")
 public class LoginController {
 
-	private final String TOKEN_KEY = "psoft";
+    private final String TOKEN_KEY = "psoft";
 
-	@Autowired
-	private UserService userService;
+    @Autowired
+    private UserService userService;
 
-	@PostMapping("/login")
-	public LoginResponse authenticate(@RequestBody User user)   {
+    @PostMapping("/login")
+    public LoginResponse authenticate(@RequestBody User user) {
 
-		// Recupera o usuario
-		User authUser = userService.findByLogin(user.getEmail());
+        // Recupera o usuario
+        User authUser = userService.findByLogin(user.getEmail());
 
-		// verificacoes
-		if (authUser == null) {
-			throw new UserNotFoundException("Usuario nao encontrado!");
-		}
+        // verificacoes
+        if (authUser == null) {
+            throw new UserNotFoundException("Usuario nao encontrado!");
+        }
 
-		if (!authUser.getPassword().equals(user.getPassword())) {
-			throw new IncorrectPasswordException("Senha invalida!");
-		}
+        if (!authUser.getPassword().equals(user.getPassword())) {
+            throw new IncorrectPasswordException("Senha invalida!");
+        }
 
-		String token = Jwts.builder().setSubject(authUser.getEmail()).signWith(SignatureAlgorithm.HS512, TOKEN_KEY)
-				.setExpiration(new Date(System.currentTimeMillis() + 1 * 60 * 1000)).compact();
+        String token = Jwts.builder().setSubject(authUser.getEmail()).signWith(SignatureAlgorithm.HS512, TOKEN_KEY)
+                .setExpiration(new Date(System.currentTimeMillis() + 1 * 60 * 1000)).compact();
 
-		return new LoginResponse(token);
-
-	}
-
+        return new LoginResponse(token);
+    }
 }

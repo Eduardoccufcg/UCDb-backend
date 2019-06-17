@@ -18,37 +18,33 @@ import Application.services.EmailService;
 import Application.services.UserService;
 
 @RestController
-@RequestMapping({ "/v1/users" })
+@RequestMapping({"/v1/users"})
 public class UserController {
-	@Autowired
-	private EmailService emailService;
-	
-	private UserService userService;
+    @Autowired
+    private EmailService emailService;
 
-	public UserController(UserService userService) {
-		this.userService = userService;
+    private UserService userService;
 
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
-	}
+    @GetMapping(value = "/{login}")
+    public ResponseEntity<User> getUser(@PathVariable String email) {
+        User user = this.userService.findByLogin(email);
+        if (user == null) {
+            throw new UserNotFoundException("Usuário Inexistente");
+        }
+        return new ResponseEntity<User>(this.userService.findByLogin(email), HttpStatus.OK);
+    }
 
-	@GetMapping(value = "/{login}")
-	public ResponseEntity<User> getUser(@PathVariable String email) {
-		User user = this.userService.findByLogin(email);
-		if (user == null) {
-			throw new UserNotFoundException("Usuário Inexistente");
-		}
-		return new ResponseEntity<User>(this.userService.findByLogin(email), HttpStatus.OK);
-	}
-
-	@PostMapping(value = "/")
-	@ResponseBody
-	public ResponseEntity<User> create(@RequestBody User user) {
-
-		if(this.userService.findByLogin(user.getEmail()) != null) {
-			throw new UserAlreadyExistsException("Usuário já cadastrado");
-		}
-		this.emailService.send("<" + user.getEmail() + ">");
-		return new ResponseEntity<User>(this.userService.create(user), HttpStatus.CREATED);
-	}
-
+    @PostMapping(value = "/")
+    @ResponseBody
+    public ResponseEntity<User> create(@RequestBody User user) {
+        if (this.userService.findByLogin(user.getEmail()) != null) {
+            throw new UserAlreadyExistsException("Usuário já cadastrado");
+        }
+        this.emailService.send("<" + user.getEmail() + ">");
+        return new ResponseEntity<User>(this.userService.create(user), HttpStatus.CREATED);
+    }
 }
