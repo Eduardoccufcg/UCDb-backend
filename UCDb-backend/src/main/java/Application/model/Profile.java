@@ -22,7 +22,7 @@ public class Profile {
 	private int numDeslikes;
 
 	
-	private List<Grade> grades;
+	//private List<Grade> grades;
 	
 	public Profile() {
 		
