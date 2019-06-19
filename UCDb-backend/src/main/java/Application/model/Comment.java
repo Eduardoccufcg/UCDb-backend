@@ -32,9 +32,9 @@ public class Comment {
 
 	}
 
-	public Comment(String text, Date date) {
+	public Comment(String text) {
 		this.text = text;
-		this.setDate(date);
+		this.date = new Date();
 
 	}
 
