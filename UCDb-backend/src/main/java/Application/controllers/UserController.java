@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import Application.exception.EmptyPasswordException;
 import Application.exception.UserAlreadyExistsException;
 import Application.exception.UserNotFoundException;
 import Application.model.User;
@@ -41,6 +42,12 @@ public class UserController {
     @PostMapping(value = "/")
     @ResponseBody
     public ResponseEntity<User> create(@RequestBody User user) {
+    	
+    	if(user.getPassword() == null | user.getPassword().isEmpty()) {
+    		throw new EmptyPasswordException("Senha inválida");
+    	}
+    	
+    	
         if (this.userService.findByLogin(user.getEmail()) != null) {
             throw new UserAlreadyExistsException("Usuário já cadastrado");
         }

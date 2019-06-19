@@ -15,9 +15,9 @@ public class DisciplineService {
 	public DisciplineService(DisciplineDAO disciplineDAO) {
 		this.disciplineDAO = disciplineDAO;
 	}
-	public Discipline create(Discipline discipline) {
+	public Iterable<Discipline> create(Iterable<Discipline> discipline) {
 
-		return disciplineDAO.save(discipline);
+		return disciplineDAO.saveAll(discipline);
 
 	}
 	public List<Discipline> findBySubstring(String substring) {

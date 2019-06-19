@@ -27,7 +27,9 @@ public class LoginController {
 
     @PostMapping("/login")
     public LoginResponse authenticate(@RequestBody User user) {
+    	
 
+  
         // Recupera o usuario
         User authUser = userService.findByLogin(user.getEmail());
 

@@ -2,6 +2,8 @@ package Application.model;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 @Entity
 public class User {
@@ -10,6 +12,8 @@ public class User {
 
 	private String firstName;
 	private String lastName;
+	
+	@NotEmpty
 	private String password;
 	
 	public User() {

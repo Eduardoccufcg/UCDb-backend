@@ -29,9 +29,9 @@ public class DisciplineController {
 
 	@PostMapping(value = "/")
 	@ResponseBody
-	public ResponseEntity<Discipline> create(@RequestBody Discipline dis) {
+	public ResponseEntity<Iterable<Discipline>> create(@RequestBody Iterable<Discipline> dis) {
 
-		return new ResponseEntity<Discipline>(this.disciplineService.create(dis), HttpStatus.CREATED);
+		return new ResponseEntity<Iterable<Discipline>>(this.disciplineService.create(dis), HttpStatus.CREATED);
 	}
 
 	@SuppressWarnings({ "rawtypes" })

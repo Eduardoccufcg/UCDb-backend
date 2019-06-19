@@ -24,17 +24,19 @@ public class Comment {
 	@JoinColumn(name = "email_user")
 	private User email_user;
 
+	@JoinColumn(name = "text")
 	private String text;
 
+	@JoinColumn(name = "date")
 	private Date date;
 
 	public Comment() {
 
 	}
 
-	public Comment(String text, Date date) {
+	public Comment(String text) {
 		this.text = text;
-		this.setDate(date);
+		this.date = new Date();
 
 	}
 

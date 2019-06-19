@@ -33,6 +33,11 @@ public class RestExceptionHandler {
 		CustomRestError errorMessage = new CustomRestError(new Date(), ex.getMessage(), request.getDescription(false));
 		return new ResponseEntity<>(errorMessage, new HttpHeaders(), HttpStatus.NOT_FOUND);
 	}
+	@ExceptionHandler(EmptyPasswordException.class)
+	public ResponseEntity<CustomRestError> EmptyPassword(Exception ex, WebRequest request) {
+		CustomRestError errorMessage = new CustomRestError(new Date(), ex.getMessage(), request.getDescription(false));
+		return new ResponseEntity<>(errorMessage, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+	}
 
 
 
