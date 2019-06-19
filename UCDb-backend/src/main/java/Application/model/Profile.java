@@ -70,5 +70,12 @@ public class Profile {
 		this.idProfile = id;
 		
 	}
+	public List<Comment> getComments(){
+		return this.comments;
+	}
+
+	public List<Grade> getGrades() {
+		return this.grades;
+	}
 
 }

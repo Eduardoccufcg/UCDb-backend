@@ -21,6 +21,7 @@ public class Grade {
 	@JoinColumn(name = "id_profile")
 	private Profile profile;
 
+	@JoinColumn(name ="grade")
 	private int grade;
 
 	public Grade(int grade) {

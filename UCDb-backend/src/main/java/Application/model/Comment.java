@@ -24,8 +24,10 @@ public class Comment {
 	@JoinColumn(name = "email_user")
 	private User email_user;
 
+	@JoinColumn(name = "text")
 	private String text;
 
+	@JoinColumn(name = "date")
 	private Date date;
 
 	public Comment() {

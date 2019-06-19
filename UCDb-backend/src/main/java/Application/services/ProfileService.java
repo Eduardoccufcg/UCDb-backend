@@ -1,7 +1,11 @@
 package Application.services;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
+import Application.model.Comment;
+import Application.model.Grade;
 import Application.model.Profile;
 import Application.repositoriesDAO.DisciplineDAO;
 import Application.repositoriesDAO.ProfileDAO;
@@ -28,6 +32,10 @@ public class ProfileService {
 		profile.setDisciplina(disciplineDAO.findById(id));
 		return profileDAO.save(profile);
 	}
+	public List<Comment>  getComments(long id) {
+		return this.profileDAO.findById(id).getComments();
+	}
+	
 	
 	
 	
