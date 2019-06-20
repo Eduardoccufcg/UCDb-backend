@@ -18,7 +18,7 @@ public class Comment {
 
 	@ManyToOne
 	@JoinColumn(name = "id_profile")
-	private Profile id_profile;
+	private DisciplineProfile id_profile;
 
 	@ManyToOne
 	@JoinColumn(name = "email_user")
