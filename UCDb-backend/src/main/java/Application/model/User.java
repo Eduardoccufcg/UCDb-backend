@@ -3,7 +3,7 @@ package Application.model;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+
 
 @Entity
 public class User {
@@ -20,7 +20,8 @@ public class User {
 		
 	}
 
-	public User(String firstName, String lastName, String password) {
+	public User(String email,String firstName, String lastName, String password) {
+		this.setEmail(email);
 		this.setFirstName(firstName);
 		this.setLastName(lastName);
 		this.setPassword(password);

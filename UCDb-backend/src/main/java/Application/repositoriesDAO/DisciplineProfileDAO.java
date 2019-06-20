@@ -13,8 +13,8 @@ import Application.model.DisciplineProfile;
 @Repository
 public interface DisciplineProfileDAO extends JpaRepository<DisciplineProfile, String> {
 	
-	@Query(value="SELECT CONCAT(d.id,' - ',d.name) FROM DisciplineProfile d WHERE d.name LIKE %:subs%")
-	List<String> findBySubstring(@Param("subs") String subs);
+	@Query(value="SELECT d FROM DisciplineProfile d WHERE d.name LIKE %:subs%")
+	List<DisciplineProfile> findBySubstring(@Param("subs") String subs);
 
 	DisciplineProfile findById(long id);
 }

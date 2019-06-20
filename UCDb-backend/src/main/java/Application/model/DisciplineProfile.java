@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+
 import javax.persistence.OneToMany;
 
 @Entity
@@ -22,6 +23,10 @@ public class DisciplineProfile {
 	
 	@OneToMany
 	private List<Comment> comments;
+	
+	@OneToMany
+	private List<Grade> grades;
+
 
 	public DisciplineProfile() {
 		
@@ -31,6 +36,7 @@ public class DisciplineProfile {
 	public DisciplineProfile(String name) {
 		this.setName(name);
 		this.comments = new ArrayList<Comment>();
+		this.grades = new ArrayList<Grade>();
 		
 	}
 
