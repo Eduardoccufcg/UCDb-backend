@@ -1,7 +1,13 @@
 package Application.model;
 
+import java.util.List;
+
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.validation.constraints.NotEmpty;
 
 
@@ -15,6 +21,11 @@ public class User {
 	
 	@NotEmpty
 	private String password;
+	
+	
+	@ManyToMany(mappedBy = "userThatGaveLike")
+	
+	private List<DisciplineProfile> profilesUserGaveLike;
 	
 	public User() {
 		
