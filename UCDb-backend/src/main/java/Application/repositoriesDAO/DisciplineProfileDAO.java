@@ -17,4 +17,8 @@ public interface DisciplineProfileDAO extends JpaRepository<DisciplineProfile, S
 	List<DisciplineProfile> findBySubstring(@Param("subs") String subs);
 
 	DisciplineProfile findById(long id);
+	
+	
+	@SuppressWarnings("unchecked")
+	DisciplineProfile save(DisciplineProfile p );
 }

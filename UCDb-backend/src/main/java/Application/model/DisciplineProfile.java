@@ -63,4 +63,12 @@ public class DisciplineProfile {
 		this.id = id;
 	}
 
+	public List<User> getUserThatGaveLike() {
+		return userThatGaveLike;
+	}
+
+	public void setUserThatGaveLike(List<User> userThatGaveLike) {
+		this.userThatGaveLike = userThatGaveLike;
+	}
+
 }

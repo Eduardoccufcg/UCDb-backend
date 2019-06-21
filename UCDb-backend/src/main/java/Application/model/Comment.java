@@ -14,11 +14,11 @@ public class Comment {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long id_comment;
+	private long idComment;
 
 	@ManyToOne
 	@JoinColumn(name = "id_profile")
-	private DisciplineProfile id_profile;
+	private DisciplineProfile idProfile;
 
 	@ManyToOne
 	@JoinColumn(name = "email_user")
