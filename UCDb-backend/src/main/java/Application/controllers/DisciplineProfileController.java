@@ -40,17 +40,10 @@ public class DisciplineProfileController {
 
 	}
 
-	@GetMapping(value = "/{id}")
+	@GetMapping(value = "/{id}/{email}")
 	@ResponseBody
-	public ResponseEntity<DisciplineProfile> get(@PathVariable long id) {
-		return new ResponseEntity<DisciplineProfile>(this.disciplineProfileService.getProfile(id), HttpStatus.OK);
-
-	}
-
-	@GetMapping(value = "average/{id}")
-	@ResponseBody
-	public ResponseEntity<Double> getGradeProfile(@PathVariable Long id) {
-		return new ResponseEntity<Double>(this.disciplineProfileService.getAverageProfile(id), HttpStatus.OK);
+	public ResponseEntity<DisciplineProfile> get(@PathVariable long id,@PathVariable String email) {
+		return new ResponseEntity<DisciplineProfile>(this.disciplineProfileService.getProfile(id,email), HttpStatus.OK);
 
 	}
 
@@ -59,17 +52,24 @@ public class DisciplineProfileController {
 	@ResponseBody
 	public ResponseEntity<List> getBySubstring(@RequestParam(name = "substring") String substring) {
 
-		List discipline = disciplineProfileService.findBySubstring(substring);
+		List discipline = disciplineProfileService.findBySubstring(substring.toUpperCase());
 
 		return new ResponseEntity<List>(discipline, HttpStatus.OK);
 	}
 
-	@PostMapping(value = "/{idPerfil}/{email}")
+	@PostMapping(value = "/grade/{idPerfil}/{email}")
 	@ResponseBody
-	public ResponseEntity<Grade> createGrade(@PathVariable String email, @PathVariable Long idPerfil,
+	public ResponseEntity<DisciplineProfile> createGrade(@PathVariable String email, @PathVariable Long idPerfil,
 			@RequestBody Grade grade) {
 
-		return new ResponseEntity<Grade>(this.gradeService.create(idPerfil, email, grade), HttpStatus.CREATED);
+		return new ResponseEntity<DisciplineProfile>(this.gradeService.create(idPerfil, email, grade), HttpStatus.CREATED);
+
+	}
+	@PostMapping(value = "/like/{idPerfil}/{email}")
+	@ResponseBody
+	public ResponseEntity<DisciplineProfile> createLike(@PathVariable String email, @PathVariable Long idPerfil) {
+
+		return new ResponseEntity<DisciplineProfile>(this.disciplineProfileService.toLike(email, idPerfil), HttpStatus.CREATED);
 
 	}
 }

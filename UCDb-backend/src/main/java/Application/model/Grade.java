@@ -1,6 +1,6 @@
 package Application.model;
 
-import javax.persistence.Column;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -15,7 +15,6 @@ public class Grade {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long idG;
 	
-	@Column(name = "grade")
 	private long grade;
 
 	@OneToOne

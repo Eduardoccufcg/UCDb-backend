@@ -27,19 +27,16 @@ public class GradeService {
 		this.userDAO = userDAO;
 	}
 
-	public Grade create(long id, String email, Grade grade) {
+	public DisciplineProfile create(long id, String email, Grade grade) {
 
-		
 		
 			User user = userDAO.findByLogin(email);
-			System.out.println(user.getEmail());
 			DisciplineProfile discipline = profileDAO.findById(id);
-			System.out.println(discipline.getId());
 			grade.setDisciplineProfile(discipline);
 			grade.setUser(user);
-
-		
-			return this.gradeDAO.save(grade);
+			gradeDAO.save(grade);
+			return profileDAO.save(discipline);
+			
 	}
 
 

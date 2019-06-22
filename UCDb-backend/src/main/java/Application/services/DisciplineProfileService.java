@@ -2,10 +2,12 @@ package Application.services;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import Application.model.DisciplineProfile;
 import Application.model.User;
+import Application.repositoriesDAO.CommentDAO;
 import Application.repositoriesDAO.DisciplineProfileDAO;
 import Application.repositoriesDAO.GradeDAO;
 import Application.repositoriesDAO.UserDAO;
@@ -16,6 +18,8 @@ public class DisciplineProfileService {
 	private final DisciplineProfileDAO disciplineProfileDAO;
 	private final UserDAO userDAO;
 	private GradeDAO gradeDAO;
+	@Autowired
+	private CommentDAO commentDAO;
 
 	public DisciplineProfileService(DisciplineProfileDAO disciplineProfileDAO, GradeDAO gradeDAO,UserDAO userDAO) {
 		this.gradeDAO = gradeDAO;
@@ -28,7 +32,16 @@ public class DisciplineProfileService {
 		return disciplineProfileDAO.saveAll(disciplineProfile);
 	}
 
-	public DisciplineProfile getProfile(long id) {
+	public DisciplineProfile getProfile(long id, String email) {
+		User user = userDAO.findByLogin(email);
+		DisciplineProfile discipline = disciplineProfileDAO.findById(id);
+	
+		//if(discipline.userThatGaveLike().contains(user)) {
+		//	discipline.setUserLike(true);
+		//}else {
+		//	discipline.setUserLike(false);
+		//}
+		///disciplineProfileDAO.save(discipline);
 		return disciplineProfileDAO.findById(id);
 	}
 
@@ -57,8 +70,13 @@ public class DisciplineProfileService {
 		
 		User user = userDAO.findByLogin(email);
 		DisciplineProfile discipline = disciplineProfileDAO.findById(idProfile);
+		if(!discipline.userThatGaveLike().contains(user)) {
+			discipline.userThatGaveLike().add(user);
+		}else {
+			discipline.userThatGaveLike().remove(user);
+		}
 		
-		discipline.getUserThatGaveLike().add(user);
+		
 		return disciplineProfileDAO.save(discipline);
 		
 		

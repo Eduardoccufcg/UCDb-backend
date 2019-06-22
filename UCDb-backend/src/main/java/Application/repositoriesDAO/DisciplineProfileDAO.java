@@ -18,7 +18,6 @@ public interface DisciplineProfileDAO extends JpaRepository<DisciplineProfile, S
 
 	DisciplineProfile findById(long id);
 	
-	
 	@SuppressWarnings("unchecked")
 	DisciplineProfile save(DisciplineProfile p );
 }

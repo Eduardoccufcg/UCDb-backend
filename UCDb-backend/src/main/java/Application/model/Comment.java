@@ -5,9 +5,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
+
 
 import javax.persistence.ManyToOne;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
 public class Comment {
@@ -15,26 +17,25 @@ public class Comment {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long idComment;
+	
+	@ManyToOne
+	@JsonBackReference
+	private DisciplineProfile profile;
 
 	@ManyToOne
-	@JoinColumn(name = "id_profile")
-	private DisciplineProfile idProfile;
+	private User user;
 
-	@ManyToOne
-	@JoinColumn(name = "email_user")
-	private User email_user;
-
-	@JoinColumn(name = "text")
 	private String text;
 
-	@JoinColumn(name = "date")
 	private Date date;
 
 	public Comment() {
 
 	}
 
-	public Comment(String text) {
+	public Comment(String text,DisciplineProfile profile,User user) {
+		this.setProfile(profile);
+		this.setUser(user);
 		this.text = text;
 		this.date = new Date();
 
@@ -54,6 +55,22 @@ public class Comment {
 
 	public void setDate(Date date) {
 		this.date = date;
+	}
+
+	public DisciplineProfile getProfile() {
+		return profile;
+	}
+
+	public void setProfile(DisciplineProfile profile) {
+		this.profile = profile;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
 	}
 
 }
