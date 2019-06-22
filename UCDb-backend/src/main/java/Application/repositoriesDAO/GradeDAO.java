@@ -13,8 +13,8 @@ import Application.model.User;
 public interface GradeDAO extends JpaRepository<Grade, Long> {
 
 
-	@Query(value = "SELECT g.grade FROM Grade g WHERE g.disciplineProfile = :id")
-	List<Long> findGradesByPerfil(@Param("id") long idDisciplineProfile);
+	@Query(value = "SELECT g FROM Grade g WHERE g.disciplineProfile = :dis")
+	List<Grade> findGradesByPerfil(@Param("dis") DisciplineProfile dis);
 
 
 	 @Query(

@@ -12,6 +12,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
+
 @Entity
 public class DisciplineProfile {
 	@Id
@@ -19,10 +20,6 @@ public class DisciplineProfile {
 	private long id;
 
 	private String name;
-	
-	private double nota;
-	
-	private boolean userLike;
 
 	@OneToMany
 	private List<Comment> comments;
@@ -39,17 +36,45 @@ public class DisciplineProfile {
 	}
 
 	public DisciplineProfile(String name) {
-		this.setNota(0);
-		this.userLike = false;
+
 		this.setName(name);
 		this.setComments(new ArrayList<Comment>());
 		this.setGrades(new ArrayList<Grade>());
 
 	}
+
 	public int getLikes() {
-		if(this.userThatGaveLike == null) return 0;
+		if (this.userThatGaveLike == null)
+			return 0;
 		else
 			return this.userThatGaveLike.size();
+	}
+
+	public int getUserGrades() {
+		if (this.grades == null)
+			return 0;
+		else
+			return this.grades.size();
+	}
+
+	public double getGradeProfile() {
+		double average = 0;
+		if (this.grades == null) {
+			average = 0;
+		} else {
+
+			double sum = 0;
+
+			for (Grade grade : grades) {
+				sum += grade.getGrade();
+			}
+
+			average = sum / grades.size();
+
+		}
+
+		return average;
+
 	}
 
 	public String getName() {
@@ -84,28 +109,12 @@ public class DisciplineProfile {
 		this.comments = comments;
 	}
 
-	public List<Grade> getGrades() {
-		return grades;
-	}
-
 	public void setGrades(List<Grade> grades) {
 		this.grades = grades;
 	}
 
-	public double getNota() {
-		return nota;
+	public int userGrades() {
+		return this.grades.size();
 	}
 
-	public void setNota(double nota) {
-		this.nota = nota;
-	}
-
-	public boolean isUserLike() {
-		return userLike;
-	}
-
-	public void setUserLike(boolean userLike) {
-		this.userLike = userLike;
-	}
-	
 }

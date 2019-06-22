@@ -13,10 +13,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import Application.model.Comment;
 import Application.model.DisciplineProfile;
 import Application.model.Grade;
 import Application.services.DisciplineProfileService;
 import Application.services.GradeService;
+
 
 @RestController
 @RequestMapping({ "v1/profiles" })
@@ -57,19 +59,27 @@ public class DisciplineProfileController {
 		return new ResponseEntity<List>(discipline, HttpStatus.OK);
 	}
 
-	@PostMapping(value = "/grade/{idPerfil}/{email}")
+	@PostMapping(value = "/grade/{profile}/{email}")
 	@ResponseBody
-	public ResponseEntity<DisciplineProfile> createGrade(@PathVariable String email, @PathVariable Long idPerfil,
+	public ResponseEntity<DisciplineProfile> createGrade(@PathVariable String email, @PathVariable Long profile,
 			@RequestBody Grade grade) {
 
-		return new ResponseEntity<DisciplineProfile>(this.gradeService.create(idPerfil, email, grade), HttpStatus.CREATED);
+		return new ResponseEntity<DisciplineProfile>(this.gradeService.create(profile, email, grade), HttpStatus.CREATED);
 
 	}
-	@PostMapping(value = "/like/{idPerfil}/{email}")
+	@PostMapping(value = "/like/{profile}/{email}")
 	@ResponseBody
-	public ResponseEntity<DisciplineProfile> createLike(@PathVariable String email, @PathVariable Long idPerfil) {
+	public ResponseEntity<DisciplineProfile> createLike(@PathVariable String email, @PathVariable Long profile) {
 
-		return new ResponseEntity<DisciplineProfile>(this.disciplineProfileService.toLike(email, idPerfil), HttpStatus.CREATED);
+		return new ResponseEntity<DisciplineProfile>(this.disciplineProfileService.toLike(email, profile), HttpStatus.CREATED);
 
+	}
+	@PostMapping(value = "/comment/{profile}/{email}")
+	@ResponseBody
+	public ResponseEntity<DisciplineProfile> usuarioComentou(@PathVariable long profile, @PathVariable String email,
+			@RequestBody Comment comment) {
+
+		return new ResponseEntity<DisciplineProfile>(this.disciplineProfileService.toComment(profile, email, comment),
+				HttpStatus.OK);
 	}
 }

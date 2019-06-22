@@ -8,6 +8,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
 public class Grade {
 	
@@ -22,6 +24,7 @@ public class Grade {
 
 	
 	@ManyToOne
+	@JsonBackReference
 	private DisciplineProfile disciplineProfile;
 
 	public Grade(long grade, User user, DisciplineProfile discipline) {

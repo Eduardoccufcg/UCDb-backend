@@ -1,10 +1,12 @@
 package Application.services;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import Application.model.Comment;
 import Application.model.DisciplineProfile;
 import Application.model.User;
 import Application.repositoriesDAO.CommentDAO;
@@ -21,7 +23,7 @@ public class DisciplineProfileService {
 	@Autowired
 	private CommentDAO commentDAO;
 
-	public DisciplineProfileService(DisciplineProfileDAO disciplineProfileDAO, GradeDAO gradeDAO,UserDAO userDAO) {
+	public DisciplineProfileService(DisciplineProfileDAO disciplineProfileDAO, GradeDAO gradeDAO, UserDAO userDAO) {
 		this.gradeDAO = gradeDAO;
 		this.disciplineProfileDAO = disciplineProfileDAO;
 		this.userDAO = userDAO;
@@ -35,51 +37,55 @@ public class DisciplineProfileService {
 	public DisciplineProfile getProfile(long id, String email) {
 		User user = userDAO.findByLogin(email);
 		DisciplineProfile discipline = disciplineProfileDAO.findById(id);
-	
-		//if(discipline.userThatGaveLike().contains(user)) {
-		//	discipline.setUserLike(true);
-		//}else {
-		//	discipline.setUserLike(false);
-		//}
-		///disciplineProfileDAO.save(discipline);
+
+		// if(discipline.userThatGaveLike().contains(user)) {
+		// discipline.setUserLike(true);
+		// }else {
+		// discipline.setUserLike(false);
+		// }
+		/// disciplineProfileDAO.save(discipline);
 		return disciplineProfileDAO.findById(id);
-	}
-
-	public Double getAverageProfile(Long id) {
-		double sum = 0;
-		double average = 0;
-
-		List<Long> grades = gradeDAO.findGradesByPerfil(id);
-		for (Long grade : grades) {
-			sum += grade;
-		}
-		if (grades.size() > 0) {
-			average = sum / grades.size();
-		}
-		return average;
-
 	}
 
 	public List<DisciplineProfile> findBySubstring(String substring) {
 		return disciplineProfileDAO.findBySubstring(substring);
 	}
+
 	/*
 	 * Dar like
 	 */
-	public DisciplineProfile toLike(String email,long idProfile) {
-		
+	public DisciplineProfile toLike(String email, long idProfile) {
+
 		User user = userDAO.findByLogin(email);
 		DisciplineProfile discipline = disciplineProfileDAO.findById(idProfile);
-		if(!discipline.userThatGaveLike().contains(user)) {
+		if (!discipline.userThatGaveLike().contains(user)) {
 			discipline.userThatGaveLike().add(user);
-		}else {
+		} else {
 			discipline.userThatGaveLike().remove(user);
 		}
-		
-		
+
 		return disciplineProfileDAO.save(discipline);
-		
-		
+
+	}
+
+	public DisciplineProfile toComment(long id, String email, Comment comment) {
+		User u = this.userDAO.findByLogin(email);
+		DisciplineProfile d = this.disciplineProfileDAO.findById(id);
+
+		if (d != null && u != null) {
+			comment.setProfile(d);
+			comment.setUser(u);
+			comment.setDate(new Date());
+			this.commentDAO.save(comment);
+			List<Comment> l = commentDAO.findbyDisciplineProfile(d);
+			d.setComments(l);
+
+			return this.disciplineProfileDAO.save(d);
+		} else {
+			// .....
+			throw new IllegalArgumentException();
+		}
+
 	}
 
 }
