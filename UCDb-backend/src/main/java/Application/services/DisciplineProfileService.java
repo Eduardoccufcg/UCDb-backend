@@ -38,13 +38,12 @@ public class DisciplineProfileService {
 		User user = userDAO.findByLogin(email);
 		DisciplineProfile discipline = disciplineProfileDAO.findById(id);
 
-		// if(discipline.userThatGaveLike().contains(user)) {
-		// discipline.setUserLike(true);
-		// }else {
-		// discipline.setUserLike(false);
-		// }
-		/// disciplineProfileDAO.save(discipline);
-		return disciplineProfileDAO.findById(id);
+		if (discipline.userThatGaveLike().contains(user)) {
+			discipline.setUserLogInLike(true);
+		} else {
+			discipline.setUserLogInLike(false);
+		}
+		return disciplineProfileDAO.save(discipline);
 	}
 
 	public List<DisciplineProfile> findBySubstring(String substring) {

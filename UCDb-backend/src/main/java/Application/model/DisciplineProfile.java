@@ -11,7 +11,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
-
+import javax.persistence.Transient;
 
 @Entity
 public class DisciplineProfile {
@@ -26,6 +26,9 @@ public class DisciplineProfile {
 
 	@OneToMany
 	private List<Grade> grades;
+
+	@Transient
+	private boolean userLogInLike;
 
 	@ManyToMany
 	@JoinTable(name = "user_like_discipline", joinColumns = @JoinColumn(name = "id"), inverseJoinColumns = @JoinColumn(name = "email"))
@@ -57,13 +60,14 @@ public class DisciplineProfile {
 			return this.grades.size();
 	}
 
-	public double getGradeProfile() {
-		double average = 0;
-		if (this.grades == null) {
-			average = 0;
-		} else {
+	public Double getGradeProfile() {
 
-			double sum = 0;
+		if (this.grades == null) {
+			return 0.0;
+
+		} else {
+			Double average = 0.0;
+			Double sum = 0.0;
 
 			for (Grade grade : grades) {
 				sum += grade.getGrade();
@@ -71,9 +75,9 @@ public class DisciplineProfile {
 
 			average = sum / grades.size();
 
-		}
+			return average;
 
-		return average;
+		}
 
 	}
 
@@ -115,6 +119,14 @@ public class DisciplineProfile {
 
 	public int userGrades() {
 		return this.grades.size();
+	}
+
+	public boolean isUserLogInLike() {
+		return userLogInLike;
+	}
+
+	public void setUserLogInLike(boolean userLogIn) {
+		this.userLogInLike = userLogIn;
 	}
 
 }
