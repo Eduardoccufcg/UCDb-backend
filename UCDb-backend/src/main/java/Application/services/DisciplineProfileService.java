@@ -11,7 +11,6 @@ import Application.model.DisciplineProfile;
 import Application.model.User;
 import Application.repositoriesDAO.CommentDAO;
 import Application.repositoriesDAO.DisciplineProfileDAO;
-import Application.repositoriesDAO.GradeDAO;
 import Application.repositoriesDAO.UserDAO;
 
 @Service
@@ -19,12 +18,12 @@ public class DisciplineProfileService {
 
 	private final DisciplineProfileDAO disciplineProfileDAO;
 	private final UserDAO userDAO;
-	private GradeDAO gradeDAO;
-	@Autowired
-	private CommentDAO commentDAO;
 
-	public DisciplineProfileService(DisciplineProfileDAO disciplineProfileDAO, GradeDAO gradeDAO, UserDAO userDAO) {
-		this.gradeDAO = gradeDAO;
+	@Autowired
+	private CommentDAO<?, ?> commentDAO;
+
+	public DisciplineProfileService(DisciplineProfileDAO disciplineProfileDAO, UserDAO userDAO) {
+
 		this.disciplineProfileDAO = disciplineProfileDAO;
 		this.userDAO = userDAO;
 	}
@@ -43,6 +42,15 @@ public class DisciplineProfileService {
 		} else {
 			discipline.setUserLogInLike(false);
 		}
+		List<Comment> list = commentDAO.findbyDisciplineProfile(discipline);
+		for (int i = 0; i < list.size(); i++) {
+			if (list.get(i).getUser().equals(user)) {
+				list.get(i).setUserLogInComment(true);
+			} else {
+				list.get(i).setUserLogInComment(false);
+			}
+		}
+
 		return disciplineProfileDAO.save(discipline);
 	}
 
@@ -62,11 +70,12 @@ public class DisciplineProfileService {
 		} else {
 			discipline.userThatGaveLike().remove(user);
 		}
-
+		discipline.setNumLikes(discipline.userThatGaveLike().size());
 		return disciplineProfileDAO.save(discipline);
 
 	}
 
+	/* Comentar */
 	public DisciplineProfile toComment(long id, String email, Comment comment) {
 		User u = this.userDAO.findByLogin(email);
 		DisciplineProfile d = this.disciplineProfileDAO.findById(id);
@@ -77,6 +86,7 @@ public class DisciplineProfileService {
 			comment.setDate(new Date());
 			this.commentDAO.save(comment);
 			List<Comment> l = commentDAO.findbyDisciplineProfile(d);
+
 			d.setComments(l);
 
 			return this.disciplineProfileDAO.save(d);

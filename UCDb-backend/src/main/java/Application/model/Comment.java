@@ -1,13 +1,16 @@
 package Application.model;
 
 import java.util.Date;
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
@@ -17,7 +20,7 @@ public class Comment {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long idComment;
-	
+
 	@ManyToOne
 	@JsonBackReference
 	private DisciplineProfile profile;
@@ -25,15 +28,21 @@ public class Comment {
 	@ManyToOne
 	private User user;
 
+	@Transient
+	private boolean userLogInComment;
+
 	private String text;
 
 	private Date date;
+
+	@OneToMany
+	private List<Comment> answers;
 
 	public Comment() {
 
 	}
 
-	public Comment(String text,DisciplineProfile profile,User user) {
+	public Comment(String text, DisciplineProfile profile, User user) {
 		this.setProfile(profile);
 		this.setUser(user);
 		this.text = text;
@@ -71,6 +80,22 @@ public class Comment {
 
 	public void setUser(User user) {
 		this.user = user;
+	}
+
+	public boolean isUserLogInComment() {
+		return userLogInComment;
+	}
+
+	public void setUserLogInComment(boolean userLogInComment) {
+		this.userLogInComment = userLogInComment;
+	}
+
+	public List<Comment> getAnswers() {
+		return answers;
+	}
+
+	public void setAnswers(List<Comment> answers) {
+		this.answers = answers;
 	}
 
 }

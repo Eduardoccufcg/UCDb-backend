@@ -21,11 +21,10 @@ public class DisciplineProfile {
 
 	private String name;
 
-	@OneToMany
-	private List<Comment> comments;
+	private int numLikes;
 
 	@OneToMany
-	private List<Grade> grades;
+	private List<Comment> comments;
 
 	@Transient
 	private boolean userLogInLike;
@@ -42,42 +41,6 @@ public class DisciplineProfile {
 
 		this.setName(name);
 		this.setComments(new ArrayList<Comment>());
-		this.setGrades(new ArrayList<Grade>());
-
-	}
-
-	public int getLikes() {
-		if (this.userThatGaveLike == null)
-			return 0;
-		else
-			return this.userThatGaveLike.size();
-	}
-
-	public int getUserGrades() {
-		if (this.grades == null)
-			return 0;
-		else
-			return this.grades.size();
-	}
-
-	public Double getGradeProfile() {
-
-		if (this.grades == null) {
-			return 0.0;
-
-		} else {
-			Double average = 0.0;
-			Double sum = 0.0;
-
-			for (Grade grade : grades) {
-				sum += grade.getGrade();
-			}
-
-			average = sum / grades.size();
-
-			return average;
-
-		}
 
 	}
 
@@ -113,20 +76,20 @@ public class DisciplineProfile {
 		this.comments = comments;
 	}
 
-	public void setGrades(List<Grade> grades) {
-		this.grades = grades;
-	}
-
-	public int userGrades() {
-		return this.grades.size();
-	}
-
 	public boolean isUserLogInLike() {
 		return userLogInLike;
 	}
 
 	public void setUserLogInLike(boolean userLogIn) {
 		this.userLogInLike = userLogIn;
+	}
+
+	public int getNumLikes() {
+		return numLikes;
+	}
+
+	public void setNumLikes(int numLikes) {
+		this.numLikes = numLikes;
 	}
 
 }

@@ -15,10 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import Application.model.Comment;
 import Application.model.DisciplineProfile;
-import Application.model.Grade;
 import Application.services.DisciplineProfileService;
-import Application.services.GradeService;
-
 
 @RestController
 @RequestMapping({ "v1/profiles" })
@@ -26,10 +23,8 @@ public class DisciplineProfileController {
 
 	private DisciplineProfileService disciplineProfileService;
 
-	private GradeService gradeService;
+	public DisciplineProfileController(DisciplineProfileService profileService) {
 
-	public DisciplineProfileController(DisciplineProfileService profileService, GradeService gradeService) {
-		this.gradeService = gradeService;
 		this.disciplineProfileService = profileService;
 	}
 
@@ -44,8 +39,9 @@ public class DisciplineProfileController {
 
 	@GetMapping(value = "/{id}/{email}")
 	@ResponseBody
-	public ResponseEntity<DisciplineProfile> get(@PathVariable long id,@PathVariable String email) {
-		return new ResponseEntity<DisciplineProfile>(this.disciplineProfileService.getProfile(id,email), HttpStatus.OK);
+	public ResponseEntity<DisciplineProfile> get(@PathVariable long id, @PathVariable String email) {
+		return new ResponseEntity<DisciplineProfile>(this.disciplineProfileService.getProfile(id, email),
+				HttpStatus.OK);
 
 	}
 
@@ -59,21 +55,15 @@ public class DisciplineProfileController {
 		return new ResponseEntity<List>(discipline, HttpStatus.OK);
 	}
 
-	@PostMapping(value = "/grade/{profile}/{email}")
-	@ResponseBody
-	public ResponseEntity<DisciplineProfile> createGrade(@PathVariable String email, @PathVariable Long profile,
-			@RequestBody Grade grade) {
-
-		return new ResponseEntity<DisciplineProfile>(this.gradeService.create(profile, email, grade), HttpStatus.CREATED);
-
-	}
 	@PostMapping(value = "/like/{profile}/{email}")
 	@ResponseBody
 	public ResponseEntity<DisciplineProfile> createLike(@PathVariable String email, @PathVariable Long profile) {
 
-		return new ResponseEntity<DisciplineProfile>(this.disciplineProfileService.toLike(email, profile), HttpStatus.CREATED);
+		return new ResponseEntity<DisciplineProfile>(this.disciplineProfileService.toLike(email, profile),
+				HttpStatus.CREATED);
 
 	}
+
 	@PostMapping(value = "/comment/{profile}/{email}")
 	@ResponseBody
 	public ResponseEntity<DisciplineProfile> usuarioComentou(@PathVariable long profile, @PathVariable String email,

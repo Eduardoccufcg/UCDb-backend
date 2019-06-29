@@ -12,13 +12,12 @@ import Application.model.Comment;
 import Application.model.DisciplineProfile;
 
 @Repository
-public interface CommentDAO<T,ID extends Serializable> extends JpaRepository<Comment, Long> {
+public interface CommentDAO<T, ID extends Serializable> extends JpaRepository<Comment, Long> {
 
 	@SuppressWarnings("unchecked")
 	Comment save(Comment comment);
 
-	@Query(
-			 value=("SELECT c FROM Comment c WHERE c.profile = :dis"))
-	List<Comment> findbyDisciplineProfile(@Param("dis")DisciplineProfile d);
+	@Query(value = ("SELECT c FROM Comment c WHERE c.profile = :dis"))
+	List<Comment> findbyDisciplineProfile(@Param("dis") DisciplineProfile d);
 
 }
