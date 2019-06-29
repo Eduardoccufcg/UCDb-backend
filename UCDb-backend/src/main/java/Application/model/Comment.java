@@ -54,14 +54,6 @@ public class Comment {
 
 	}
 
-	public String getUserName() {
-		return this.user.getFirstName();
-	}
-
-	public String getUserEmail() {
-		return this.user.getEmail();
-	}
-
 	public String getText() {
 		return text;
 	}
@@ -86,7 +78,7 @@ public class Comment {
 		this.profile = profile;
 	}
 
-	@JsonBackReference
+	
 	public User getUser() {
 		return user;
 	}

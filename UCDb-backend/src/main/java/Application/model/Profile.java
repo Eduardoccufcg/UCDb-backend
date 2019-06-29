@@ -88,7 +88,6 @@ public class Profile {
 		this.numLikes = numLikes;
 	}
 
-	@JsonBackReference
 	public Discipline getDiscipline() {
 		return discipline;
 	}
@@ -96,8 +95,6 @@ public class Profile {
 	public void setDiscipline(Discipline discipline) {
 		this.discipline = discipline;
 	}
-	public String getNameDiscipline() {
-		return this.discipline.getName();
-	}
+	
 
 }
