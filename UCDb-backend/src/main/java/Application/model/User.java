@@ -27,7 +27,7 @@ public class User {
 	private List<Comment> comments;
 	
 	@ManyToMany(mappedBy = "userThatGaveLike")
-	private List<DisciplineProfile> profilesUserGaveLike;
+	private List<Profile> profilesUserGaveLike;
 	
 	public User() {
 		

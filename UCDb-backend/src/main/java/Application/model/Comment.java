@@ -23,7 +23,7 @@ public class Comment {
 
 	@ManyToOne
 	@JsonBackReference
-	private DisciplineProfile profile;
+	private Profile profile;
 
 	@ManyToOne
 	private User user;
@@ -34,7 +34,7 @@ public class Comment {
 	private String text;
 
 	private Date date;
-
+	
 	@OneToMany
 	private List<Comment> answers;
 
@@ -42,7 +42,7 @@ public class Comment {
 
 	}
 
-	public Comment(String text, DisciplineProfile profile, User user) {
+	public Comment(String text, Profile profile, User user) {
 		this.setProfile(profile);
 		this.setUser(user);
 		this.text = text;
@@ -66,11 +66,11 @@ public class Comment {
 		this.date = date;
 	}
 
-	public DisciplineProfile getProfile() {
+	public Profile getProfile() {
 		return profile;
 	}
 
-	public void setProfile(DisciplineProfile profile) {
+	public void setProfile(Profile profile) {
 		this.profile = profile;
 	}
 

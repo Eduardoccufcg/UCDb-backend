@@ -7,35 +7,40 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import Application.model.Comment;
-import Application.model.DisciplineProfile;
+import Application.model.Discipline;
+import Application.model.Profile;
 import Application.model.User;
 import Application.repositoriesDAO.CommentDAO;
-import Application.repositoriesDAO.DisciplineProfileDAO;
+import Application.repositoriesDAO.DisciplineDAO;
+import Application.repositoriesDAO.ProfileDAO;
 import Application.repositoriesDAO.UserDAO;
 
 @Service
-public class DisciplineProfileService {
+public class ProfileService {
 
-	private final DisciplineProfileDAO disciplineProfileDAO;
+	private final ProfileDAO profileDAO;
 	private final UserDAO userDAO;
+	private final DisciplineDAO disciplineDAO;
 
 	@Autowired
 	private CommentDAO<?, ?> commentDAO;
 
-	public DisciplineProfileService(DisciplineProfileDAO disciplineProfileDAO, UserDAO userDAO) {
+	public ProfileService(ProfileDAO disciplineProfileDAO, UserDAO userDAO, DisciplineDAO disciplinaDAO) {
 
-		this.disciplineProfileDAO = disciplineProfileDAO;
+		this.profileDAO = disciplineProfileDAO;
 		this.userDAO = userDAO;
+		this.disciplineDAO = disciplinaDAO;
 	}
 
-	public Iterable<DisciplineProfile> create(Iterable<DisciplineProfile> disciplineProfile) {
-
-		return disciplineProfileDAO.saveAll(disciplineProfile);
+	public Profile create(long id, Profile profile) {
+		profile.setId(id);
+		profile.setDiscipline(disciplineDAO.findById(id));
+		return profileDAO.save(profile);
 	}
 
-	public DisciplineProfile getProfile(long id, String email) {
+	public Profile getProfile(long id, String email) {
 		User user = userDAO.findByLogin(email);
-		DisciplineProfile discipline = disciplineProfileDAO.findById(id);
+		Profile discipline = profileDAO.findById(id);
 
 		if (discipline.userThatGaveLike().contains(user)) {
 			discipline.setUserLogInLike(true);
@@ -51,34 +56,30 @@ public class DisciplineProfileService {
 			}
 		}
 
-		return disciplineProfileDAO.save(discipline);
-	}
-
-	public List<DisciplineProfile> findBySubstring(String substring) {
-		return disciplineProfileDAO.findBySubstring(substring);
+		return profileDAO.save(discipline);
 	}
 
 	/*
 	 * Dar like
 	 */
-	public DisciplineProfile toLike(String email, long idProfile) {
+	public Profile toLike(String email, long idProfile) {
 
 		User user = userDAO.findByLogin(email);
-		DisciplineProfile discipline = disciplineProfileDAO.findById(idProfile);
+		Profile discipline = profileDAO.findById(idProfile);
 		if (!discipline.userThatGaveLike().contains(user)) {
 			discipline.userThatGaveLike().add(user);
 		} else {
 			discipline.userThatGaveLike().remove(user);
 		}
 		discipline.setNumLikes(discipline.userThatGaveLike().size());
-		return disciplineProfileDAO.save(discipline);
+		return profileDAO.save(discipline);
 
 	}
 
 	/* Comentar */
-	public DisciplineProfile toComment(long id, String email, Comment comment) {
+	public Profile toComment(long id, String email, Comment comment) {
 		User u = this.userDAO.findByLogin(email);
-		DisciplineProfile d = this.disciplineProfileDAO.findById(id);
+		Profile d = this.profileDAO.findById(id);
 
 		if (d != null && u != null) {
 			comment.setProfile(d);
@@ -89,7 +90,7 @@ public class DisciplineProfileService {
 
 			d.setComments(l);
 
-			return this.disciplineProfileDAO.save(d);
+			return this.profileDAO.save(d);
 		} else {
 			// .....
 			throw new IllegalArgumentException();

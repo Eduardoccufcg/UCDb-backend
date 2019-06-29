@@ -11,15 +11,20 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 
 @Entity
-public class DisciplineProfile {
+public class Profile {
+	
+
+	@OneToOne	
+	private Discipline discipline;
+
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@JoinColumn(name = "id_profile")
 	private long id;
 
-	private String name;
 
 	private int numLikes;
 
@@ -33,25 +38,16 @@ public class DisciplineProfile {
 	@JoinTable(name = "user_like_discipline", joinColumns = @JoinColumn(name = "id"), inverseJoinColumns = @JoinColumn(name = "email"))
 	private List<User> userThatGaveLike;
 
-	public DisciplineProfile() {
+	public Profile() {
 
 	}
 
-	public DisciplineProfile(String name) {
+	public Profile(Long id) {
 
-		this.setName(name);
+		this.id = id;
 		this.setComments(new ArrayList<Comment>());
 
 	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
 	public long getId() {
 		return id;
 	}
@@ -90,6 +86,14 @@ public class DisciplineProfile {
 
 	public void setNumLikes(int numLikes) {
 		this.numLikes = numLikes;
+	}
+
+	public Discipline getDiscipline() {
+		return discipline;
+	}
+
+	public void setDiscipline(Discipline discipline) {
+		this.discipline = discipline;
 	}
 
 }
