@@ -10,6 +10,7 @@ import javax.persistence.Id;
 
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -34,7 +35,10 @@ public class Comment {
 	private String text;
 
 	private Date date;
-	
+
+	@OneToOne
+	private Comment parent;
+
 	@OneToMany
 	private List<Comment> answers;
 
@@ -48,6 +52,14 @@ public class Comment {
 		this.text = text;
 		this.date = new Date();
 
+	}
+
+	public String getUserName() {
+		return this.user.getFirstName();
+	}
+
+	public String getUserEmail() {
+		return this.user.getEmail();
 	}
 
 	public String getText() {
@@ -74,6 +86,7 @@ public class Comment {
 		this.profile = profile;
 	}
 
+	@JsonBackReference
 	public User getUser() {
 		return user;
 	}
@@ -96,6 +109,18 @@ public class Comment {
 
 	public void setAnswers(List<Comment> answers) {
 		this.answers = answers;
+	}
+
+	public long getIdComment() {
+		return idComment;
+	}
+
+	public void setIdComment(long idComment) {
+		this.idComment = idComment;
+	}
+
+	public void setParent(Comment parent) {
+		this.parent = parent;
 	}
 
 }

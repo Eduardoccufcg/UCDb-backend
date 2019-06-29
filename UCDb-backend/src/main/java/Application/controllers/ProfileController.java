@@ -49,10 +49,18 @@ public class ProfileController {
 
 	@PostMapping(value = "/comment/{profile}/{email}")
 	@ResponseBody
-	public ResponseEntity<Profile> usuarioComentou(@PathVariable long profile, @PathVariable String email,
+	public ResponseEntity<Profile> userComment(@PathVariable long profile, @PathVariable String email,
 			@RequestBody Comment comment) {
 
 		return new ResponseEntity<Profile>(this.disciplineProfileService.toComment(profile, email, comment),
+				HttpStatus.OK);
+	}
+	@PostMapping(value = "/reply/comment/{idParent}/{email}")
+	@ResponseBody
+	public ResponseEntity<Profile> replyComment(@PathVariable long idParent, @PathVariable String email,
+			@RequestBody Comment comment) {
+
+		return new ResponseEntity<Profile>(this.disciplineProfileService.toReplyComment(idParent, email, comment),
 				HttpStatus.OK);
 	}
 }

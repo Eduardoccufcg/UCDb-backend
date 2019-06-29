@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -13,6 +11,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Transient;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
 public class Profile {
@@ -88,12 +88,16 @@ public class Profile {
 		this.numLikes = numLikes;
 	}
 
+	@JsonBackReference
 	public Discipline getDiscipline() {
 		return discipline;
 	}
 
 	public void setDiscipline(Discipline discipline) {
 		this.discipline = discipline;
+	}
+	public String getNameDiscipline() {
+		return this.discipline.getName();
 	}
 
 }

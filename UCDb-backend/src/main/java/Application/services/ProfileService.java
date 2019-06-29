@@ -23,7 +23,7 @@ public class ProfileService {
 	private final DisciplineDAO disciplineDAO;
 
 	@Autowired
-	private CommentDAO<?, ?> commentDAO;
+	private CommentDAO commentDAO;
 
 	public ProfileService(ProfileDAO disciplineProfileDAO, UserDAO userDAO, DisciplineDAO disciplinaDAO) {
 
@@ -96,6 +96,21 @@ public class ProfileService {
 			throw new IllegalArgumentException();
 		}
 
+	}
+	/*
+	 * Responder um comentario
+	 */
+
+	public Profile toReplyComment(long idParent, String email, Comment comment) {
+		Comment parent = commentDAO.findByIdComment(idParent);
+		comment.setDate(new Date());
+		Profile profile = parent.getProfile();
+		comment.setProfile(profile);
+		comment.setParent(parent);
+		comment.setUser(this.userDAO.findByLogin(email));
+		commentDAO.save(comment);
+		parent.getAnswers().add(comment);
+		return this.profileDAO.save(profile);
 	}
 
 }

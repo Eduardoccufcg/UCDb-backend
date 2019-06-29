@@ -1,6 +1,6 @@
 package Application.repositoriesDAO;
 
-import java.io.Serializable;
+
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,12 +12,16 @@ import Application.model.Comment;
 import Application.model.Profile;
 
 @Repository
-public interface CommentDAO<T, ID extends Serializable> extends JpaRepository<Comment, Long> {
+public interface CommentDAO extends JpaRepository<Comment, Long> {
 
+	Comment findByIdComment(long id);
+	
 	@SuppressWarnings("unchecked")
 	Comment save(Comment comment);
 
 	@Query(value = ("SELECT c FROM Comment c WHERE c.profile = :dis"))
 	List<Comment> findbyDisciplineProfile(@Param("dis") Profile d);
+	
+		
 
 }
