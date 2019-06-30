@@ -2,6 +2,7 @@ package Application.controllers;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,13 +24,6 @@ public class ProfileController {
 	public ProfileController(ProfileService profileService) {
 
 		this.disciplineProfileService = profileService;
-	}
-
-	@PostMapping(value = "/{id}")
-	@ResponseBody
-	public ResponseEntity<Profile> create(@PathVariable long id, @RequestBody Profile profile) {
-		return new ResponseEntity<Profile>(this.disciplineProfileService.create(id, profile), HttpStatus.CREATED);
-
 	}
 
 	@GetMapping(value = "/{id}/{email}")
@@ -55,6 +49,7 @@ public class ProfileController {
 		return new ResponseEntity<Profile>(this.disciplineProfileService.toComment(profile, email, comment),
 				HttpStatus.OK);
 	}
+
 	@PostMapping(value = "/reply/comment/{idParent}/{email}")
 	@ResponseBody
 	public ResponseEntity<Profile> replyComment(@PathVariable long idParent, @PathVariable String email,
@@ -62,5 +57,12 @@ public class ProfileController {
 
 		return new ResponseEntity<Profile>(this.disciplineProfileService.toReplyComment(idParent, email, comment),
 				HttpStatus.OK);
+	}
+
+	@DeleteMapping(value = "/delete/comment/{idParent}")
+	@ResponseBody
+	public ResponseEntity<Profile> deleteComment(@PathVariable long idParent) {
+
+		return new ResponseEntity<Profile>(this.disciplineProfileService.toDeleteComment(idParent), HttpStatus.OK);
 	}
 }

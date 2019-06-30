@@ -32,10 +32,10 @@ public class ProfileService {
 		this.disciplineDAO = disciplinaDAO;
 	}
 
-	public Profile create(long id, Profile profile) {
-		profile.setId(id);
-		profile.setDiscipline(disciplineDAO.findById(id));
-		return profileDAO.save(profile);
+	public Profile create(Discipline discipline) {
+		Profile p = new Profile(discipline.getId());
+		p.setDiscipline(discipline);
+		return profileDAO.save(p);
 	}
 
 	public Profile getProfile(long id, String email) {
@@ -85,6 +85,7 @@ public class ProfileService {
 			comment.setProfile(d);
 			comment.setUser(u);
 			comment.setDate(new Date());
+			comment.setDeleted(false);
 			this.commentDAO.save(comment);
 			List<Comment> l = commentDAO.findbyDisciplineProfile(d);
 
@@ -107,9 +108,29 @@ public class ProfileService {
 		Profile profile = parent.getProfile();
 		comment.setProfile(profile);
 		comment.setParent(parent);
+		comment.setDeleted(false);
 		comment.setUser(this.userDAO.findByLogin(email));
 		commentDAO.save(comment);
 		parent.getAnswers().add(comment);
+		return this.profileDAO.save(profile);
+	}
+
+	public Profile toDeleteComment(long idComment) {
+		Comment comment = commentDAO.findByIdComment(idComment);
+
+		comment.setDeleted(true);
+
+		commentDAO.save(comment);
+
+		if (comment.getAnswers().size() > 0) {
+			for (Comment commentR : comment.getAnswers()) {
+				commentR.setDeleted(true);
+				commentDAO.save(commentR);
+			}
+
+		}
+
+		Profile profile = comment.getProfile();
 		return this.profileDAO.save(profile);
 	}
 

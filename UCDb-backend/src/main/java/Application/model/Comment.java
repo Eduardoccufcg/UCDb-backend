@@ -7,7 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -23,7 +23,7 @@ public class Comment {
 	private long idComment;
 
 	@ManyToOne
-	@JsonBackReference
+	@JsonBackReference(value = "profile")
 	private Profile profile;
 
 	@ManyToOne
@@ -36,11 +36,14 @@ public class Comment {
 
 	private Date date;
 
-	@OneToOne
+	@ManyToOne
+	@JsonBackReference(value = "parent")
 	private Comment parent;
 
 	@OneToMany
 	private List<Comment> answers;
+
+	private boolean deleted;
 
 	public Comment() {
 
@@ -55,10 +58,14 @@ public class Comment {
 	}
 
 	public String getText() {
-		return text;
+		if (deleted == true)
+			return "";
+		else
+			return text;
 	}
 
 	public void setText(String text) {
+
 		this.text = text;
 	}
 
@@ -78,7 +85,6 @@ public class Comment {
 		this.profile = profile;
 	}
 
-	
 	public User getUser() {
 		return user;
 	}
@@ -109,6 +115,18 @@ public class Comment {
 
 	public void setIdComment(long idComment) {
 		this.idComment = idComment;
+	}
+
+	public boolean isDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
+	}
+
+	public Comment getParent() {
+		return parent;
 	}
 
 	public void setParent(Comment parent) {
