@@ -61,8 +61,8 @@ public class ProfileController {
 
 	@DeleteMapping(value = "/delete/comment/{idParent}")
 	@ResponseBody
-	public ResponseEntity<Profile> deleteComment(@PathVariable long idParent) {
+	public ResponseEntity<Comment> deleteComment(@PathVariable long idParent) {
 
-		return new ResponseEntity<Profile>(this.disciplineProfileService.toDeleteComment(idParent), HttpStatus.OK);
+		return new ResponseEntity<Comment>(this.disciplineProfileService.toDeleteComment(idParent), HttpStatus.OK);
 	}
 }

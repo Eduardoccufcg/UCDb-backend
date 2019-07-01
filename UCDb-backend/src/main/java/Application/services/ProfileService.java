@@ -20,7 +20,6 @@ public class ProfileService {
 
 	private final ProfileDAO profileDAO;
 	private final UserDAO userDAO;
-	private final DisciplineDAO disciplineDAO;
 
 	@Autowired
 	private CommentDAO commentDAO;
@@ -29,7 +28,7 @@ public class ProfileService {
 
 		this.profileDAO = disciplineProfileDAO;
 		this.userDAO = userDAO;
-		this.disciplineDAO = disciplinaDAO;
+
 	}
 
 	public Profile create(Discipline discipline) {
@@ -115,23 +114,16 @@ public class ProfileService {
 		return this.profileDAO.save(profile);
 	}
 
-	public Profile toDeleteComment(long idComment) {
+	public Comment toDeleteComment(long idComment) {
 		Comment comment = commentDAO.findByIdComment(idComment);
 
 		comment.setDeleted(true);
 
 		commentDAO.save(comment);
 
-		if (comment.getAnswers().size() > 0) {
-			for (Comment commentR : comment.getAnswers()) {
-				commentR.setDeleted(true);
-				commentDAO.save(commentR);
-			}
-
-		}
-
 		Profile profile = comment.getProfile();
-		return this.profileDAO.save(profile);
+		this.profileDAO.save(profile);
+		return comment;
 	}
 
 }
