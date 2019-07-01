@@ -41,6 +41,7 @@ public class LoginController {
         if (!authUser.getPassword().equals(user.getPassword())) {
             throw new IncorrectPasswordException("Senha invalida!");
         }
+        
 
         String token = Jwts.builder().setSubject(authUser.getEmail()).signWith(SignatureAlgorithm.HS512, TOKEN_KEY)
                 .setExpiration(new Date(System.currentTimeMillis() + 1 * 60 * 1000)).compact();

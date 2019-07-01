@@ -6,40 +6,78 @@ import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Transient;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
 public class Profile {
+	
+
+	@OneToOne	
+	private Discipline discipline;
 
 	@Id
 	@JoinColumn(name = "id_profile")
-	private long idProfile;
+	private long id;
 
-	@OneToOne
-	@JoinColumn(name = "id_discipline")
-	private Discipline discipline;
 
 	private int numLikes;
 
-	private int numDeslikes;
-
-	@OneToMany
-	private List<Grade> grades;
-
 	@OneToMany
 	private List<Comment> comments;
+
+	@Transient
+	private boolean userLogInLike;
+
+	@ManyToMany
+	@JoinTable(name = "user_like_discipline", joinColumns = @JoinColumn(name = "id"), inverseJoinColumns = @JoinColumn(name = "email"))
+	private List<User> userThatGaveLike;
 
 	public Profile() {
 
 	}
 
-	public Profile(long id) {
-		this.idProfile = id;
-		this.numLikes = 0;
-		this.setNumDeslikes(0);
-		this.comments = new ArrayList<Comment>();
-		this.grades = new ArrayList<Grade>();
+	public Profile(Long id) {
+
+		this.id = id;
+		this.setComments(new ArrayList<Comment>());
+
+	}
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public List<User> userThatGaveLike() {
+		return userThatGaveLike;
+	}
+
+	public void setUserThatGaveLike(List<User> userThatGaveLike) {
+		this.userThatGaveLike = userThatGaveLike;
+	}
+
+	public List<Comment> getComments() {
+		return comments;
+	}
+
+	public void setComments(List<Comment> comments) {
+		this.comments = comments;
+	}
+
+	public boolean isUserLogInLike() {
+		return userLogInLike;
+	}
+
+	public void setUserLogInLike(boolean userLogIn) {
+		this.userLogInLike = userLogIn;
 	}
 
 	public int getNumLikes() {
@@ -50,32 +88,13 @@ public class Profile {
 		this.numLikes = numLikes;
 	}
 
-	public int getNumDeslikes() {
-		return numDeslikes;
+	public Discipline getDiscipline() {
+		return discipline;
 	}
 
-	public void setNumDeslikes(int numDeslikes) {
-		this.numDeslikes = numDeslikes;
-	}
-	
-	public void setDisciplina(Discipline discipline) {
+	public void setDiscipline(Discipline discipline) {
 		this.discipline = discipline;
 	}
-
-	public long getId() {
-		return idProfile;
-	}
-
-	public void setId(long id) {
-		this.idProfile = id;
-		
-	}
-	public List<Comment> getComments(){
-		return this.comments;
-	}
-
-	public List<Grade> getGrades() {
-		return this.grades;
-	}
+	
 
 }
