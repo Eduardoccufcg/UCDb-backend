@@ -12,21 +12,22 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class Profile {
-	
 
-	@OneToOne	
+	@OneToOne
 	private Discipline discipline;
 
 	@Id
 	@JoinColumn(name = "id_profile")
 	private long id;
 
-
 	private int numLikes;
+
+	@JsonIgnore
+	private int numComments;
 
 	@OneToMany
 	private List<Comment> comments;
@@ -48,6 +49,7 @@ public class Profile {
 		this.setComments(new ArrayList<Comment>());
 
 	}
+
 	public long getId() {
 		return id;
 	}
@@ -95,6 +97,13 @@ public class Profile {
 	public void setDiscipline(Discipline discipline) {
 		this.discipline = discipline;
 	}
-	
+
+	public int getNumComments() {
+		return numComments;
+	}
+
+	public void setNumComments(int numComments) {
+		this.numComments = numComments;
+	}
 
 }

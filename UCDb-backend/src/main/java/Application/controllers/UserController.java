@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import Application.exception.EmptyPasswordException;
+import Application.exception.InvalidEmailException;
 import Application.exception.UserAlreadyExistsException;
 import Application.exception.UserNotFoundException;
 import Application.model.User;
@@ -19,39 +20,44 @@ import Application.services.EmailService;
 import Application.services.UserService;
 
 @RestController
-@RequestMapping({"/v1/users"})
+@RequestMapping({ "/v1/users" })
 public class UserController {
-    @Autowired
-    private EmailService emailService;
+	@Autowired
+	private EmailService emailService;
 
-    private UserService userService;
+	private UserService userService;
 
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
+	public UserController(UserService userService) {
+		this.userService = userService;
+	}
 
-    @GetMapping(value = "/{login}")
-    public ResponseEntity<User> getUser(@PathVariable String email) {
-        User user = this.userService.findByLogin(email);
-        if (user == null) {
-            throw new UserNotFoundException("Usuário Inexistente");
-        }
-        return new ResponseEntity<User>(this.userService.findByLogin(email), HttpStatus.OK);
-    }
+	@GetMapping(value = "/{login}")
+	public ResponseEntity<User> getUser(@PathVariable String email) {
+		User user = this.userService.findByLogin(email);
+		if (user == null) {
+			throw new UserNotFoundException("Usuário Inexistente");
+		}
+		return new ResponseEntity<User>(this.userService.findByLogin(email), HttpStatus.OK);
+	}
 
-    @PostMapping(value = "/")
-    @ResponseBody
-    public ResponseEntity<User> create(@RequestBody User user) {
-    	
-    	if(user.getPassword() == null | user.getPassword().isEmpty()) {
-    		throw new EmptyPasswordException("Senha inválida");
-    	}
-    	
-    	
-        if (this.userService.findByLogin(user.getEmail()) != null) {
-            throw new UserAlreadyExistsException("Usuário já cadastrado");
-        }
-        this.emailService.send("<" + user.getEmail() + ">");
-        return new ResponseEntity<User>(this.userService.create(user), HttpStatus.CREATED);
-    }
+	@PostMapping(value = "/")
+	@ResponseBody
+	public ResponseEntity<User> create(@RequestBody User user) {
+
+		if (user.getPassword() == null | user.getPassword().isEmpty()) {
+			throw new EmptyPasswordException("Senha inválida");
+		}
+
+		if (this.userService.findByLogin(user.getEmail()) != null) {
+			throw new UserAlreadyExistsException("Usuário já cadastrado");
+		}
+		try {
+			// Falta passar pra html
+			this.emailService.send("<" + user.getEmail() + ">");
+		} catch (RuntimeException e) {
+			throw new InvalidEmailException("Email Inválido");
+		}
+
+		return new ResponseEntity<User>(this.userService.create(user), HttpStatus.CREATED);
+	}
 }

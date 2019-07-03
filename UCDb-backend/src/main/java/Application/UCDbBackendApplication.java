@@ -18,13 +18,12 @@ public class UCDbBackendApplication {
 	public FilterRegistrationBean filterJwt() {
 		FilterRegistrationBean filterRb = new FilterRegistrationBean();
 		filterRb.setFilter(new TokenFilter());
-		filterRb.setEnabled(false);
-
-		// Será usado para filtrar futuras rotas -->
-		// filterRb.addUrlPatterns("/private");
+		filterRb.addUrlPatterns("/v1/profiles/*");
+		
 		return filterRb;
 	}
 
+	@SuppressWarnings("rawtypes")
 	@Bean
 	public FilterRegistrationBean corsFilter() {
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

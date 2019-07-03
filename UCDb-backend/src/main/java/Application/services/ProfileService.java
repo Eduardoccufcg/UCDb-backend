@@ -1,14 +1,20 @@
 package Application.services;
 
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
+
+import javax.servlet.ServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import Application.model.Comment;
 import Application.model.Discipline;
+
 import Application.model.Profile;
+import Application.model.RankingDTO;
+import Application.model.RankingDTOList;
+import Application.model.TokenParseEmail;
 import Application.model.User;
 import Application.repositoriesDAO.CommentDAO;
 import Application.repositoriesDAO.DisciplineDAO;
@@ -23,6 +29,8 @@ public class ProfileService {
 
 	@Autowired
 	private CommentDAO commentDAO;
+	@Autowired
+	private TokenParseEmail tokenParse= new TokenParseEmail();;
 
 	public ProfileService(ProfileDAO disciplineProfileDAO, UserDAO userDAO, DisciplineDAO disciplinaDAO) {
 
@@ -37,8 +45,8 @@ public class ProfileService {
 		return profileDAO.save(p);
 	}
 
-	public Profile getProfile(long id, String email) {
-		User user = userDAO.findByLogin(email);
+	public Profile getProfile(long id, ServletRequest request) {
+		User user = userDAO.findByLogin(tokenParse.tokenParseEmail(request));
 		Profile discipline = profileDAO.findById(id);
 
 		if (discipline.userThatGaveLike().contains(user)) {
@@ -61,9 +69,9 @@ public class ProfileService {
 	/*
 	 * Dar like
 	 */
-	public Profile toLike(String email, long idProfile) {
+	public Profile toLike(ServletRequest request, long idProfile) {
 
-		User user = userDAO.findByLogin(email);
+		User user = userDAO.findByLogin(tokenParse.tokenParseEmail(request));
 		Profile discipline = profileDAO.findById(idProfile);
 		if (!discipline.userThatGaveLike().contains(user)) {
 			discipline.userThatGaveLike().add(user);
@@ -75,55 +83,27 @@ public class ProfileService {
 
 	}
 
-	/* Comentar */
-	public Profile toComment(long id, String email, Comment comment) {
-		User u = this.userDAO.findByLogin(email);
-		Profile d = this.profileDAO.findById(id);
-
-		if (d != null && u != null) {
-			comment.setProfile(d);
-			comment.setUser(u);
-			comment.setDate(new Date());
-			comment.setDeleted(false);
-			this.commentDAO.save(comment);
-			List<Comment> l = commentDAO.findbyDisciplineProfile(d);
-
-			d.setComments(l);
-
-			return this.profileDAO.save(d);
-		} else {
-			// .....
-			throw new IllegalArgumentException();
+	public RankingDTOList rankingTop10() {
+		//
+		List<RankingDTO> list1 = new ArrayList<>();
+		List<Profile> profiles = profileDAO.profileByLikes();
+		for (int i = 0; i < 10; i++) {
+			Profile p = profiles.get(i);
+			list1.add(new RankingDTO(p.getId(), p.getDiscipline().getName(), p.getNumLikes()));
 		}
+		
+		
+		//
+		List<RankingDTO> list2 = new ArrayList<>();
+		List<Profile> profiles2 = profileDAO.profileByComments();
+		for (int i = 0; i < 10; i++) {
+			Profile p = profiles2.get(i);
+			list2.add(new RankingDTO(p.getId(), p.getDiscipline().getName(), p.getNumComments()));
+		}
+		
+		RankingDTOList result = new RankingDTOList(list1, list2);
+		return result;
 
-	}
-	/*
-	 * Responder um comentario
-	 */
-
-	public Profile toReplyComment(long idParent, String email, Comment comment) {
-		Comment parent = commentDAO.findByIdComment(idParent);
-		comment.setDate(new Date());
-		Profile profile = parent.getProfile();
-		comment.setProfile(profile);
-		comment.setParent(parent);
-		comment.setDeleted(false);
-		comment.setUser(this.userDAO.findByLogin(email));
-		commentDAO.save(comment);
-		parent.getAnswers().add(comment);
-		return this.profileDAO.save(profile);
-	}
-
-	public Comment toDeleteComment(long idComment) {
-		Comment comment = commentDAO.findByIdComment(idComment);
-
-		comment.setDeleted(true);
-
-		commentDAO.save(comment);
-
-		Profile profile = comment.getProfile();
-		this.profileDAO.save(profile);
-		return comment;
 	}
 
 }
