@@ -55,13 +55,10 @@ public class ProfileService {
 		for (int i = 0; i < list.size(); i++) {
 			if (list.get(i).getUser().equals(user)) {
 				list.get(i).setUserLogInComment(true);
-				list.get(i).getUser().setPassword(null);
 			} else {
-				list.get(i).getUser().setPassword(null);
 				list.get(i).setUserLogInComment(false);
 			}
 		}
-		
 
 		return profileDAO.save(profile);
 	}
