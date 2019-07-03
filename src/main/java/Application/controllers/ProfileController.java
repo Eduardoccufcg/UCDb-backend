@@ -23,51 +23,44 @@ import Application.model.SubjectDTO;
 import Application.services.ProfileService;
 
 @RestController
-@RequestMapping({ "v1/profiles" })
+@RequestMapping({"v1/profiles"})
 public class ProfileController {
 
-	private ProfileService profileService;
+    private ProfileService profileService;
 
-	public ProfileController(ProfileService profileService) {
+    public ProfileController(ProfileService profileService) {
 
-		this.profileService = profileService;
-	}
+        this.profileService = profileService;
+    }
 
-	@PostMapping(value = "/")
-	@ResponseBody
-	public ResponseEntity<Iterable<Profile>> create(@RequestBody Iterable<Profile> dis) {
+    @PostMapping(value = "/")
+    @ResponseBody
+    public ResponseEntity<Iterable<Profile>> create(@RequestBody Iterable<Profile> dis) {
+        return new ResponseEntity<>(this.profileService.create(dis), HttpStatus.CREATED);
+    }
 
-		return new ResponseEntity<Iterable<Profile>>(this.profileService.create(dis), HttpStatus.CREATED);
-	}
+    @GetMapping(value = "/{id}")
+    @ResponseBody
+    public ResponseEntity<Profile> get(@PathVariable long id, ServletRequest request) {
+        return new ResponseEntity<>(this.profileService.getProfile(id, request), HttpStatus.OK);
+    }
 
-	@GetMapping(value = "/{id}")
-	@ResponseBody
-	public ResponseEntity<Profile> get(@PathVariable long id, ServletRequest request) {
+    @PostMapping(value = "/like/{profile}")
+    @ResponseBody
+    public ResponseEntity<Profile> createLike(@PathVariable Long profile, ServletRequest request) {
+        return new ResponseEntity<>(this.profileService.toLike(request, profile), HttpStatus.CREATED);
+    }
 
-		return new ResponseEntity<Profile>(this.profileService.getProfile(id, request), HttpStatus.OK);
+    @SuppressWarnings({"rawtypes"})
+    @GetMapping("/search")
+    @ResponseBody
+    public ResponseEntity<List<SubjectDTO>> getBySubstring(@RequestParam(name = "substring") String substring) {
+        return new ResponseEntity<>(this.profileService.findBySubstring(substring.toUpperCase()), HttpStatus.OK);
+    }
 
-	}
-
-	@PostMapping(value = "/like/{profile}")
-	@ResponseBody
-	public ResponseEntity<Profile> createLike(@PathVariable Long profile, ServletRequest request) {
-
-		return new ResponseEntity<Profile>(this.profileService.toLike(request, profile), HttpStatus.CREATED);
-
-	}
-
-	@SuppressWarnings({ "rawtypes" })
-	@GetMapping("/search")
-	@ResponseBody
-	public ResponseEntity<List<SubjectDTO>> getBySubstring(@RequestParam(name = "substring") String substring) {
-
-		return new ResponseEntity<List<SubjectDTO>>(this.profileService.findBySubstring(substring.toUpperCase()),HttpStatus.OK);
-	}
-
-	@GetMapping(value = "/ranking")
-	@ResponseBody
-	public ResponseEntity<RankingDTOList> ranking() {
-
-		return new ResponseEntity<RankingDTOList>(this.profileService.rankingTop10(), HttpStatus.OK);
-	}
+    @GetMapping(value = "/ranking")
+    @ResponseBody
+    public ResponseEntity<RankingDTOList> ranking() {
+        return new ResponseEntity<>(this.profileService.rankingTop10(), HttpStatus.OK);
+    }
 }
