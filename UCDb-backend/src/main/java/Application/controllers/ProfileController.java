@@ -1,6 +1,8 @@
 package Application.controllers;
 
-import java.util.List;
+
+import javax.servlet.ServletRequest;
+
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,10 +18,11 @@ import org.springframework.web.bind.annotation.RestController;
 import Application.model.Comment;
 
 import Application.model.Profile;
-import Application.model.RankingDTO;
+
 import Application.model.RankingDTOList;
 import Application.services.CommentService;
 import Application.services.ProfileService;
+
 
 @RestController
 @RequestMapping({ "v1/profiles" })
@@ -36,35 +39,37 @@ public class ProfileController {
 		this.profileService = profileService;
 	}
 
-	@GetMapping(value = "/{id}/{email}")
+	@GetMapping(value = "/{id}")
 	@ResponseBody
-	public ResponseEntity<Profile> get(@PathVariable long id, @PathVariable String email) {
-		return new ResponseEntity<Profile>(this.profileService.getProfile(id, email), HttpStatus.OK);
+	public ResponseEntity<Profile> get(@PathVariable long id, ServletRequest request) {
+
+		return new ResponseEntity<Profile>(this.profileService.getProfile(id, request), HttpStatus.OK);
 
 	}
 
-	@PostMapping(value = "/like/{profile}/{email}")
+	@PostMapping(value = "/like/{profile}")
 	@ResponseBody
-	public ResponseEntity<Profile> createLike(@PathVariable String email, @PathVariable Long profile) {
+	public ResponseEntity<Profile> createLike(@PathVariable Long profile, ServletRequest request) {
 
-		return new ResponseEntity<Profile>(this.profileService.toLike(email, profile), HttpStatus.CREATED);
+		return new ResponseEntity<Profile>(this.profileService.toLike(request,profile), HttpStatus.CREATED);
 
 	}
 
-	@PostMapping(value = "/comment/{profile}/{email}")
+	@PostMapping(value = "/comment/{profile}")
 	@ResponseBody
-	public ResponseEntity<Comment> userComment(@PathVariable long profile, @PathVariable String email,
+	public ResponseEntity<Comment> userComment(@PathVariable long profile, ServletRequest request,
 			@RequestBody Comment comment) {
 
-		return new ResponseEntity<Comment>(this.commentService.toComment(profile, email, comment), HttpStatus.OK);
+		return new ResponseEntity<Comment>(this.commentService.toComment(profile, request, comment), HttpStatus.OK);
 	}
 
-	@PostMapping(value = "/reply/comment/{idParent}/{email}")
+	@PostMapping(value = "/reply/comment/{idParent}")
 	@ResponseBody
-	public ResponseEntity<Comment> replyComment(@PathVariable long idParent, @PathVariable String email,
+	public ResponseEntity<Comment> replyComment(@PathVariable long idParent, ServletRequest request,
 			@RequestBody Comment comment) {
 
-		return new ResponseEntity<Comment>(this.commentService.toReplyComment(idParent, email, comment), HttpStatus.OK);
+		return new ResponseEntity<Comment>(this.commentService.toReplyComment(idParent, request, comment),
+				HttpStatus.OK);
 	}
 
 	@DeleteMapping(value = "/delete/comment/{idParent}")

@@ -1,5 +1,9 @@
 package Application.model;
 
+import javax.servlet.http.HttpServletRequest;
+
+import io.jsonwebtoken.Jwts;
+
 public class LoginResponse {
 	
 	private String token;

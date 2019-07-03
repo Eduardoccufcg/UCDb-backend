@@ -37,6 +37,8 @@ public class TokenFilter extends GenericFilterBean {
 		}
 		
 		chain.doFilter(request, response);
+		
+		
 	}
 
 	

@@ -3,6 +3,8 @@ package Application.services;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.ServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +14,7 @@ import Application.model.Discipline;
 import Application.model.Profile;
 import Application.model.RankingDTO;
 import Application.model.RankingDTOList;
+import Application.model.TokenParseEmail;
 import Application.model.User;
 import Application.repositoriesDAO.CommentDAO;
 import Application.repositoriesDAO.DisciplineDAO;
@@ -26,6 +29,8 @@ public class ProfileService {
 
 	@Autowired
 	private CommentDAO commentDAO;
+	@Autowired
+	private TokenParseEmail tokenParse= new TokenParseEmail();;
 
 	public ProfileService(ProfileDAO disciplineProfileDAO, UserDAO userDAO, DisciplineDAO disciplinaDAO) {
 
@@ -40,8 +45,8 @@ public class ProfileService {
 		return profileDAO.save(p);
 	}
 
-	public Profile getProfile(long id, String email) {
-		User user = userDAO.findByLogin(email);
+	public Profile getProfile(long id, ServletRequest request) {
+		User user = userDAO.findByLogin(tokenParse.tokenParseEmail(request));
 		Profile discipline = profileDAO.findById(id);
 
 		if (discipline.userThatGaveLike().contains(user)) {
@@ -64,9 +69,9 @@ public class ProfileService {
 	/*
 	 * Dar like
 	 */
-	public Profile toLike(String email, long idProfile) {
+	public Profile toLike(ServletRequest request, long idProfile) {
 
-		User user = userDAO.findByLogin(email);
+		User user = userDAO.findByLogin(tokenParse.tokenParseEmail(request));
 		Profile discipline = profileDAO.findById(idProfile);
 		if (!discipline.userThatGaveLike().contains(user)) {
 			discipline.userThatGaveLike().add(user);
