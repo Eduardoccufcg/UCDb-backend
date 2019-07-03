@@ -9,15 +9,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import Application.model.Comment;
-import Application.model.Discipline;
 
 import Application.model.Profile;
 import Application.model.RankingDTO;
 import Application.model.RankingDTOList;
+import Application.model.SubjectDTO;
 import Application.model.TokenParseEmail;
 import Application.model.User;
 import Application.repositoriesDAO.CommentDAO;
-import Application.repositoriesDAO.DisciplineDAO;
 import Application.repositoriesDAO.ProfileDAO;
 import Application.repositoriesDAO.UserDAO;
 
@@ -30,56 +29,57 @@ public class ProfileService {
 	@Autowired
 	private CommentDAO commentDAO;
 	@Autowired
-	private TokenParseEmail tokenParse= new TokenParseEmail();;
+	private TokenParseEmail tokenParse = new TokenParseEmail();
 
-	public ProfileService(ProfileDAO disciplineProfileDAO, UserDAO userDAO, DisciplineDAO disciplinaDAO) {
+	public ProfileService(ProfileDAO profileDAO, UserDAO userDAO) {
 
-		this.profileDAO = disciplineProfileDAO;
+		this.profileDAO = profileDAO;
 		this.userDAO = userDAO;
 
 	}
 
-	public Profile create(Discipline discipline) {
-		Profile p = new Profile(discipline.getId());
-		p.setDiscipline(discipline);
-		return profileDAO.save(p);
+	public Iterable<Profile> create(Iterable<Profile> profiles) {
+		return profileDAO.saveAll(profiles);
 	}
 
 	public Profile getProfile(long id, ServletRequest request) {
 		User user = userDAO.findByLogin(tokenParse.tokenParseEmail(request));
-		Profile discipline = profileDAO.findById(id);
+		Profile profile = profileDAO.findById(id);
 
-		if (discipline.userThatGaveLike().contains(user)) {
-			discipline.setUserLogInLike(true);
+		if (profile.userThatGaveLike().contains(user)) {
+			profile.setUserLogInLike(true);
 		} else {
-			discipline.setUserLogInLike(false);
+			profile.setUserLogInLike(false);
 		}
-		List<Comment> list = commentDAO.findbyDisciplineProfile(discipline);
+		List<Comment> list = commentDAO.findbyDisciplineProfile(profile);
 		for (int i = 0; i < list.size(); i++) {
 			if (list.get(i).getUser().equals(user)) {
 				list.get(i).setUserLogInComment(true);
+				list.get(i).getUser().setPassword(null);
 			} else {
+				list.get(i).getUser().setPassword(null);
 				list.get(i).setUserLogInComment(false);
 			}
 		}
+		
 
-		return profileDAO.save(discipline);
+		return profileDAO.save(profile);
 	}
 
 	/*
 	 * Dar like
 	 */
-	public Profile toLike(ServletRequest request, long idProfile) {
+	public Profile toLike(ServletRequest request, long id) {
 
 		User user = userDAO.findByLogin(tokenParse.tokenParseEmail(request));
-		Profile discipline = profileDAO.findById(idProfile);
-		if (!discipline.userThatGaveLike().contains(user)) {
-			discipline.userThatGaveLike().add(user);
+		Profile profile = profileDAO.findById(id);
+		if (!profile.userThatGaveLike().contains(user)) {
+			profile.userThatGaveLike().add(user);
 		} else {
-			discipline.userThatGaveLike().remove(user);
+			profile.userThatGaveLike().remove(user);
 		}
-		discipline.setNumLikes(discipline.userThatGaveLike().size());
-		return profileDAO.save(discipline);
+		profile.setNumLikes(profile.userThatGaveLike().size());
+		return profileDAO.save(profile);
 
 	}
 
@@ -89,20 +89,35 @@ public class ProfileService {
 		List<Profile> profiles = profileDAO.profileByLikes();
 		for (int i = 0; i < 10; i++) {
 			Profile p = profiles.get(i);
-			list1.add(new RankingDTO(p.getId(), p.getDiscipline().getName(), p.getNumLikes()));
+			list1.add(new RankingDTO(p.getId(), p.getName(), p.getNumLikes()));
 		}
-		
-		
+
 		//
 		List<RankingDTO> list2 = new ArrayList<>();
 		List<Profile> profiles2 = profileDAO.profileByComments();
 		for (int i = 0; i < 10; i++) {
 			Profile p = profiles2.get(i);
-			list2.add(new RankingDTO(p.getId(), p.getDiscipline().getName(), p.getNumComments()));
+			list2.add(new RankingDTO(p.getId(), p.getName(), p.getNumComments()));
 		}
-		
+
 		RankingDTOList result = new RankingDTOList(list1, list2);
 		return result;
+
+	}
+
+	public List<SubjectDTO> findBySubstring(String substring) {
+
+		if (substring.isEmpty()) {
+			return new ArrayList<>();
+		} else {
+			List<SubjectDTO> list = new ArrayList<>();
+			for (Profile profile : profileDAO.findBySubstring(substring)) {
+				list.add(new SubjectDTO(profile.getId(),profile.getName()));
+
+			}
+			return list;
+
+		}
 
 	}
 
