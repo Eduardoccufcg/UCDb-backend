@@ -16,23 +16,24 @@ public class UCDbBackendApplication {
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Bean
 	public FilterRegistrationBean filterJwt() {
-		FilterRegistrationBean filterRb = new FilterRegistrationBean();
-		filterRb.setFilter(new TokenFilter());
-		filterRb.addUrlPatterns("/private");
-		return filterRb;
+        FilterRegistrationBean filterRb = new FilterRegistrationBean();
+        filterRb.setFilter(new TokenFilter());
+        filterRb.addUrlPatterns("/v1/profiles/*");
+        filterRb.addUrlPatterns("/v1/comments/*");
+        return filterRb;
 	}
 
 	@SuppressWarnings("rawtypes")
 	@Bean
 	public FilterRegistrationBean corsFilter() {
-		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-		CorsConfiguration config = new CorsConfiguration().applyPermitDefaultValues();
-		config.addAllowedMethod("*");
-		source.registerCorsConfiguration("/**", config);
-		FilterRegistrationBean bean = new FilterRegistrationBean(new CorsFilter(source));
-		bean.setOrder(0);
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        CorsConfiguration config = new CorsConfiguration().applyPermitDefaultValues();
+        config.addAllowedMethod("*");
+        source.registerCorsConfiguration("/**", config);
+        FilterRegistrationBean bean = new FilterRegistrationBean(new CorsFilter(source));
+        bean.setOrder(0);
 
-		return bean;
+        return bean;
 	}
 
 	public static void main(String[] args) {
