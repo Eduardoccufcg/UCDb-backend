@@ -18,8 +18,7 @@ public class UCDbBackendApplication {
 	public FilterRegistrationBean filterJwt() {
 		FilterRegistrationBean filterRb = new FilterRegistrationBean();
 		filterRb.setFilter(new TokenFilter());
-		filterRb.addUrlPatterns("/v1/comments/*");
-		filterRb.addUrlPatterns("/v1/profiles/*");
+		filterRb.addUrlPatterns("/private");
 		return filterRb;
 	}
 
