@@ -31,10 +31,10 @@ public class ProfileService {
 	@Autowired
 	private CommentDAO commentDAO;
 	@Autowired
-	private TokenParseEmail tokenParse = new TokenParseEmail();
+	private TokenParseEmail tokenParse;
 
-	public ProfileService(ProfileDAO profileDAO, UserDAO userDAO) {
-
+	public ProfileService(ProfileDAO profileDAO, UserDAO userDAO, TokenParseEmail tokenParse) {
+		this.tokenParse = tokenParse;
 		this.profileDAO = profileDAO;
 		this.userDAO = userDAO;
 
