@@ -16,7 +16,10 @@ import Application.services.UserService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
+@Api(value = "Controlador de Login")
 @RestController
 @RequestMapping("/v1/auth")
 public class LoginController {
@@ -25,7 +28,7 @@ public class LoginController {
 
     @Autowired
     private UserService userService;
-
+    @ApiOperation(value = "Faz o login de um usúario")
     @PostMapping("/login")
     public LoginResponse authenticate(@RequestBody User user) {
 

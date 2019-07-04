@@ -14,7 +14,7 @@ public class EmailService {
         SimpleMailMessage email = new SimpleMailMessage();
         email.setTo(emaill);
         email.setSubject("Bem vindo ao UCDb :) !!");
-        email.setText("Seu cadastro foi realizado com sucesso.");
+        email.setText("Seu cadastro foi realizado com sucesso. Acesse o nossa plataforma em: https://ucdbapp.herokuapp.com");
         this.mailSender.send(email);
     }
 }

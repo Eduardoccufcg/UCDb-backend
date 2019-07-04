@@ -14,7 +14,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import Application.model.Comment;
 import Application.services.CommentService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
+@Api(value = "Controlador de comentários")
 @RestController
 @RequestMapping({"/v1/comments"})
 public class CommentController {
@@ -25,12 +28,14 @@ public class CommentController {
         this.commentService = commentService;
     }
 
+    @ApiOperation(value = "Cadastra um novo comentário")
     @PostMapping(value = "/{profile}")
     @ResponseBody
     public ResponseEntity<Comment> userComment(@PathVariable long profile, ServletRequest request, @RequestBody Comment comment) {
         return new ResponseEntity<>(this.commentService.toComment(profile, request, comment), HttpStatus.OK);
     }
 
+    @ApiOperation(value = "Cadastra uma nova resposta a um comentário")
     @PostMapping(value = "/reply/{idParent}")
     @ResponseBody
     public ResponseEntity<Comment> replyComment(@PathVariable long idParent, ServletRequest request,
@@ -39,6 +44,7 @@ public class CommentController {
         return new ResponseEntity<>(this.commentService.toReplyComment(idParent, request, comment), HttpStatus.OK);
     }
 
+    @ApiOperation(value = "Deleta um comentário")
     @DeleteMapping(value = "/{id}")
     @ResponseBody
     public ResponseEntity<Comment> deleteComment(@PathVariable long id) {

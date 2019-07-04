@@ -21,46 +21,53 @@ import Application.model.Profile;
 import Application.model.RankingDTOList;
 import Application.model.SubjectDTO;
 import Application.services.ProfileService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 @RestController
-@RequestMapping({"v1/profiles"})
+@Api(value = "Controlador de Perfis")
+@RequestMapping({ "v1/profiles" })
 public class ProfileController {
 
-    private ProfileService profileService;
+	private ProfileService profileService;
 
-    public ProfileController(ProfileService profileService) {
+	public ProfileController(ProfileService profileService) {
 
-        this.profileService = profileService;
-    }
+		this.profileService = profileService;
+	}
 
-    @PostMapping(value = "/")
-    @ResponseBody
-    public ResponseEntity<Iterable<Profile>> create(@RequestBody Iterable<Profile> dis) {
-        return new ResponseEntity<>(this.profileService.create(dis), HttpStatus.CREATED);
-    }
+	@ApiOperation(value = "Cadastra um novo perfil de uma disciplina")
+	@PostMapping(value = "/")
+	@ResponseBody
+	public ResponseEntity<Iterable<Profile>> create(@RequestBody Iterable<Profile> dis) {
+		return new ResponseEntity<>(this.profileService.create(dis), HttpStatus.CREATED);
+	}
 
-    @GetMapping(value = "/{id}")
-    @ResponseBody
-    public ResponseEntity<Profile> get(@PathVariable long id, ServletRequest request) {
-        return new ResponseEntity<>(this.profileService.getProfile(id, request), HttpStatus.OK);
-    }
+	@ApiOperation(value = "Retorna um perfil de uma disciplina")
+	@GetMapping(value = "/{id}")
+	@ResponseBody
+	public ResponseEntity<Profile> get(@PathVariable long id, ServletRequest request) {
+		return new ResponseEntity<>(this.profileService.getProfile(id, request), HttpStatus.OK);
+	}
 
-    @PostMapping(value = "/like/{profile}")
-    @ResponseBody
-    public ResponseEntity<Profile> createLike(@PathVariable Long profile, ServletRequest request) {
-        return new ResponseEntity<>(this.profileService.toLike(request, profile), HttpStatus.CREATED);
-    }
+	@ApiOperation(value = "Dar like a um perfil de uma disciplina")
+	@PostMapping(value = "/like/{profile}")
+	@ResponseBody
+	public ResponseEntity<Profile> createLike(@PathVariable Long profile, ServletRequest request) {
+		return new ResponseEntity<>(this.profileService.toLike(request, profile), HttpStatus.CREATED);
+	}
 
-    @SuppressWarnings({"rawtypes"})
-    @GetMapping("/search")
-    @ResponseBody
-    public ResponseEntity<List<SubjectDTO>> getBySubstring(@RequestParam(name = "substring") String substring) {
-        return new ResponseEntity<>(this.profileService.findBySubstring(substring.toUpperCase()), HttpStatus.OK);
-    }
+	@ApiOperation(value = "Retorna uma lista de perfis a partir de uma substring")
+	@GetMapping("/search")
+	@ResponseBody
+	public ResponseEntity<List<SubjectDTO>> getBySubstring(@RequestParam(name = "substring") String substring) {
+		return new ResponseEntity<>(this.profileService.findBySubstring(substring.toUpperCase()), HttpStatus.OK);
+	}
 
-    @GetMapping(value = "/ranking")
-    @ResponseBody
-    public ResponseEntity<RankingDTOList> ranking() {
-        return new ResponseEntity<>(this.profileService.rankingTop10(), HttpStatus.OK);
-    }
+	@ApiOperation(value = "Retorna uma lista de perfis ordenados por número de comentarios e likes")
+	@GetMapping(value = "/ranking")
+	@ResponseBody
+	public ResponseEntity<RankingDTOList> ranking() {
+		return new ResponseEntity<>(this.profileService.rankingTop10(), HttpStatus.OK);
+	}
 }

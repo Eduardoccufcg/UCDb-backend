@@ -8,6 +8,8 @@ import javax.servlet.ServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import Application.exception.ProfileNotFoundException;
+import Application.exception.UserNotFoundException;
 import Application.model.Comment;
 
 import Application.model.Profile;
@@ -45,6 +47,12 @@ public class ProfileService {
 	public Profile getProfile(long id, ServletRequest request) {
 		User user = userDAO.findByLogin(tokenParse.tokenParseEmail(request));
 		Profile profile = profileDAO.findById(id);
+		if (user == null) {
+			throw new UserNotFoundException("Usuário não existe");
+		}
+		if (profile == null) {
+			throw new ProfileNotFoundException("Perfil não existe");
+		}
 
 		if (profile.userThatGaveLike().contains(user)) {
 			profile.setUserLogInLike(true);
@@ -70,6 +78,13 @@ public class ProfileService {
 
 		User user = userDAO.findByLogin(tokenParse.tokenParseEmail(request));
 		Profile profile = profileDAO.findById(id);
+
+		if (user == null) {
+			throw new UserNotFoundException("Usuário não existe");
+		}
+		if (profile == null) {
+			throw new ProfileNotFoundException("Perfil não existe");
+		}
 		if (!profile.userThatGaveLike().contains(user)) {
 			profile.userThatGaveLike().add(user);
 		} else {
@@ -109,7 +124,7 @@ public class ProfileService {
 		} else {
 			List<SubjectDTO> list = new ArrayList<>();
 			for (Profile profile : profileDAO.findBySubstring(substring)) {
-				list.add(new SubjectDTO(profile.getId(),profile.getName()));
+				list.add(new SubjectDTO(profile.getId(), profile.getName()));
 
 			}
 			return list;

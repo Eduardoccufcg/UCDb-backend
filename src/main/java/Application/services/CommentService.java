@@ -6,6 +6,8 @@ import java.util.List;
 import javax.servlet.ServletRequest;
 import org.springframework.stereotype.Service;
 
+import Application.exception.ProfileNotFoundException;
+import Application.exception.UserNotFoundException;
 import Application.model.Comment;
 import Application.model.Profile;
 import Application.model.TokenParseEmail;
@@ -20,7 +22,7 @@ public class CommentService {
 	private final ProfileDAO profileDAO;
 	private final UserDAO userDAO;
 	private final CommentDAO commentDAO;
-	private TokenParseEmail tokenParse = new TokenParseEmail();
+	private TokenParseEmail tokenParse;
 
 	public CommentService(ProfileDAO profileDAO, UserDAO userDAO, CommentDAO commentDAO, TokenParseEmail tokenParse) {
 		this.tokenParse = tokenParse;
@@ -31,18 +33,25 @@ public class CommentService {
 
 	/* Comentar */
 	public Comment toComment(long id, ServletRequest request, Comment comment) {
-		User u = this.userDAO.findByLogin(tokenParse.tokenParseEmail(request));
+		User user = this.userDAO.findByLogin(tokenParse.tokenParseEmail(request));
 		Profile profile = this.profileDAO.findById(id);
+		if (user == null) {
+			throw new UserNotFoundException("Usuário não existe");
+		}
+		if (profile == null) {
+			throw new ProfileNotFoundException("Perfil não existe");
+		}
+
 		profile.setNumComments(profile.getNumComments() + 1);
 		comment.setProfile(profile);
-		comment.setUser(u);
+		comment.setUser(user);
 		comment.setDate(new Date());
 		comment.setDeleted(false);
 		this.commentDAO.save(comment);
 
 		List<Comment> list = commentDAO.findbyDisciplineProfile(profile);
 		for (int i = 0; i < list.size(); i++) {
-			if (list.get(i).getUser().equals(u)) {
+			if (list.get(i).getUser().equals(user)) {
 				list.get(i).setUserLogInComment(true);
 			} else {
 				list.get(i).setUserLogInComment(false);
@@ -91,18 +100,18 @@ public class CommentService {
 		}
 		comment.setDeleted(true);
 
-		deleteFilhos(comment.getAnswers());
+		deleteChildrens(comment.getAnswers());
 		commentDAO.save(comment);
 		this.profileDAO.save(profile);
 		return comment;
 	}
 
-	private void deleteFilhos(List<Comment> list) {
+	private void deleteChildrens(List<Comment> list) {
 
 		if (list.size() > 0) {
 			for (int i = 0; i < list.size(); i++) {
 				list.get(i).setDeleted(true);
-				deleteFilhos(list.get(i).getAnswers());
+				deleteChildrens(list.get(i).getAnswers());
 			}
 
 		}
