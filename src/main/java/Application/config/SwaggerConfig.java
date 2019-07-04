@@ -34,10 +34,10 @@ public class SwaggerConfig {
 
         ApiInfo apiInfo = new ApiInfo(
                 "API UCDb: classificações e reviews de cursos da UFCG",
-                "Objetivo: organizar plataforma colaborativa para avaliações e informações sobre disciplinas de cursos da UFCG",
+                "Objetivo: Organizar uma plataforma colaborativa para avaliações e informações sobre disciplinas de cursos da UFCG",
                 "1.0",
                 "Terms of Service",
-                new Contact("Eduardo Pereira & Júlia Fernandes", "https://ucdbapp.herokuapp.com",
+                new Contact("Eduardo Pereira & Júlia Fernandes", "https://ucdbapplication.herokuapp.com/",
                         "ucdbapplication@gmail.com"),
                 "Apache License Version 2.0",
                 "https://www.apache.org/licesen.html", new ArrayList<VendorExtension>()

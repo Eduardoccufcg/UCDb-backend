@@ -49,8 +49,8 @@ public class LoginController {
         claims.put("lastName", authUser.getLastName());
 
         String token = Jwts.builder().setClaims(claims).signWith(SignatureAlgorithm.HS512, TOKEN_KEY)
-                .setExpiration(new Date(System.currentTimeMillis() + 860_000_000)).compact();
-
+                .setExpiration(new Date(System.currentTimeMillis() + 86_400_000)).compact();
+       
         return new LoginResponse(token);
     }
 }
