@@ -67,9 +67,18 @@ public class CommentService {
 		comment.setProfile(profile);
 		comment.setParent(parent);
 		comment.setDeleted(false);
-		comment.setUser(this.userDAO.findByLogin(tokenParse.tokenParseEmail(request)));
+		User user = this.userDAO.findByLogin(tokenParse.tokenParseEmail(request));
+		comment.setUser(user);
 		commentDAO.save(comment);
 		parent.getAnswers().add(comment);
+		List<Comment> list = commentDAO.findbyDisciplineProfile(profile);
+		for (int i = 0; i < list.size(); i++) {
+			if (list.get(i).getUser().equals(user)) {
+				list.get(i).setUserLogInComment(true);
+			} else {
+				list.get(i).setUserLogInComment(false);
+			}
+		}
 		this.profileDAO.save(profile);
 		return comment;
 	}
