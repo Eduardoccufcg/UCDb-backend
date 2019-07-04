@@ -44,7 +44,7 @@ public class UserController {
 	@ResponseBody
 	public ResponseEntity<User> create(@RequestBody User user) {
 
-		if (user.getPassword() == null | user.getPassword().isEmpty()) {
+		if (user.password() == null | user.password().isEmpty()) {
 			throw new EmptyPasswordException("Senha inválida");
 		}
 

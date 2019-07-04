@@ -19,7 +19,7 @@ public interface CommentDAO extends JpaRepository<Comment, Long> {
 	@SuppressWarnings("unchecked")
 	Comment save(Comment comment);
 
-	@Query(value = ("SELECT c FROM Comment c WHERE c.profile = :dis"))
+	@Query(value = ("SELECT c FROM Comment c WHERE c.profile = :dis ORDER BY c.date DESC"))
 	List<Comment> findbyDisciplineProfile(@Param("dis") Profile d);
 	
 		

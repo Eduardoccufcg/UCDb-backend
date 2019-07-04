@@ -14,7 +14,6 @@ import Application.repositoriesDAO.CommentDAO;
 import Application.repositoriesDAO.ProfileDAO;
 import Application.repositoriesDAO.UserDAO;
 
-
 @Service
 public class CommentService {
 
@@ -23,7 +22,7 @@ public class CommentService {
 	private final CommentDAO commentDAO;
 	private TokenParseEmail tokenParse = new TokenParseEmail();
 
-	public CommentService(ProfileDAO profileDAO, UserDAO userDAO, CommentDAO commentDAO,TokenParseEmail tokenParse) {
+	public CommentService(ProfileDAO profileDAO, UserDAO userDAO, CommentDAO commentDAO, TokenParseEmail tokenParse) {
 		this.tokenParse = tokenParse;
 		this.profileDAO = profileDAO;
 		this.userDAO = userDAO;
@@ -40,6 +39,15 @@ public class CommentService {
 		comment.setDate(new Date());
 		comment.setDeleted(false);
 		this.commentDAO.save(comment);
+
+		List<Comment> list = commentDAO.findbyDisciplineProfile(profile);
+		for (int i = 0; i < list.size(); i++) {
+			if (list.get(i).getUser().equals(u)) {
+				list.get(i).setUserLogInComment(true);
+			} else {
+				list.get(i).setUserLogInComment(false);
+			}
+		}
 		List<Comment> l = commentDAO.findbyDisciplineProfile(profile);
 
 		profile.setComments(l);
@@ -74,12 +82,21 @@ public class CommentService {
 		}
 		comment.setDeleted(true);
 
+		deleteFilhos(comment.getAnswers());
 		commentDAO.save(comment);
-
 		this.profileDAO.save(profile);
 		return comment;
 	}
 
-	
+	private void deleteFilhos(List<Comment> list) {
+
+		if (list.size() > 0) {
+			for (int i = 0; i < list.size(); i++) {
+				list.get(i).setDeleted(true);
+				deleteFilhos(list.get(i).getAnswers());
+			}
+
+		}
+	}
 
 }

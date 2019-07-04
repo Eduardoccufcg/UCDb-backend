@@ -63,7 +63,7 @@ public class User {
 		this.lastName = lastName;
 	}
 
-	public String getPassword() {
+	public String password() {
 		return password;
 	}
 
