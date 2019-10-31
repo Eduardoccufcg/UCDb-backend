@@ -23,6 +23,18 @@ A estrutura do projeto consiste:
 
 ```
 
+## Como executar?
+
+Para rodar seu projeto abra um terminal, entre no diretório raiz do projeto e execute o comando abaixo:
+```
+mvn spring-boot:run
+```
+
+Se o maven não estiver instalado de forma apropriada você também pode executar com o seguinte comando (que vem no próprio projeto criado no starter do Spring quando você escolhe maven como seu gerenciador de dependências):
+```
+./mvnw spring-boot:run
+```
+
 ## Arquitetura
 
 O projeto utiliza a [arquitetura MVC](https://github.com/daltonserey/projsw-20191/blob/master/06.web_apps/1-padrao_mvc/text.md).
