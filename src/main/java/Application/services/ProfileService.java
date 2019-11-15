@@ -25,20 +25,19 @@ import Application.repositoriesDAO.UserDAO;
 @Service
 public class ProfileService {
 
-	@Autowired
-	private ProfileDAO profileDAO;
-	
-	@Autowired
-	private UserDAO userDAO;
+	private final ProfileDAO profileDAO;
+	private final UserDAO userDAO;
 
 	@Autowired
 	private CommentDAO commentDAO;
-	
 	@Autowired
 	private TokenParseEmail tokenParse;
 
-	public ProfileService() {
-	
+	public ProfileService(ProfileDAO profileDAO, UserDAO userDAO, TokenParseEmail tokenParse) {
+		this.tokenParse = tokenParse;
+		this.profileDAO = profileDAO;
+		this.userDAO = userDAO;
+
 	}
 
 	public Iterable<Profile> create(Iterable<Profile> profiles) {
@@ -46,7 +45,6 @@ public class ProfileService {
 	}
 
 	public Profile getProfile(long id, ServletRequest request) {
-		
 		User user = userDAO.findByLogin(tokenParse.tokenParseEmail(request));
 		Profile profile = profileDAO.findById(id);
 		if (user == null) {
@@ -55,25 +53,27 @@ public class ProfileService {
 		if (profile == null) {
 			throw new ProfileNotFoundException("Perfil não existe");
 		}
+
 		if (profile.userThatGaveLike().contains(user)) {
 			profile.setUserLogInLike(true);
 		} else {
 			profile.setUserLogInLike(false);
 		}
-		userLogInComment(commentDAO.findbyDisciplineProfile(profile),user);
-		return profileDAO.save(profile);
-	}
-	
-	private void userLogInComment(List<Comment> list, User user) {
+		List<Comment> list = commentDAO.findbyDisciplineProfile(profile);
 		for (int i = 0; i < list.size(); i++) {
 			if (list.get(i).getUser().equals(user)) {
 				list.get(i).setUserLogInComment(true);
 			} else {
 				list.get(i).setUserLogInComment(false);
 			}
-		}	
+		}
+
+		return profileDAO.save(profile);
 	}
 
+	/*
+	 * Dar like
+	 */
 	public Profile toLike(ServletRequest request, long id) {
 
 		User user = userDAO.findByLogin(tokenParse.tokenParseEmail(request));
@@ -96,33 +96,40 @@ public class ProfileService {
 	}
 
 	public RankingDTOList rankingTop10() {
-	
+		//
 		List<RankingDTO> list1 = new ArrayList<>();
+		List<Profile> profiles = profileDAO.profileByLikes();
+		for (int i = 0; i < 10; i++) {
+			Profile p = profiles.get(i);
+			list1.add(new RankingDTO(p.getId(), p.getName(), p.getNumLikes()));
+		}
+
+		//
 		List<RankingDTO> list2 = new ArrayList<>();
-		List<Profile> profilesLikes = profileDAO.profileByLikes().subList(0, 10);
-		List<Profile> profilesComments = profileDAO.profileByComments().subList(0, 10);
-		
-		for (Profile profile : profilesLikes) {
-			list1.add(new RankingDTO(profile.getId(), profile.getName(), profile.getNumLikes()));
+		List<Profile> profiles2 = profileDAO.profileByComments();
+		for (int i = 0; i < 10; i++) {
+			Profile p = profiles2.get(i);
+			list2.add(new RankingDTO(p.getId(), p.getName(), p.getNumComments()));
 		}
-		for (Profile profile : profilesComments) {
-			list1.add(new RankingDTO(profile.getId(), profile.getName(), profile.getNumComments()));
-		}
-		
-		return new RankingDTOList(list1, list2);
+
+		RankingDTOList result = new RankingDTOList(list1, list2);
+		return result;
 
 	}
 
 	public List<SubjectDTO> findBySubstring(String substring) {
-		
-		List<SubjectDTO> list = new ArrayList<>();
-		if (!substring.isEmpty()) {
+
+		if (substring.isEmpty()) {
+			return new ArrayList<>();
+		} else {
+			List<SubjectDTO> list = new ArrayList<>();
 			for (Profile profile : profileDAO.findBySubstring(substring)) {
 				list.add(new SubjectDTO(profile.getId(), profile.getName()));
 
 			}
+			return list;
+
 		}
-		return list;
 
 	}
 
