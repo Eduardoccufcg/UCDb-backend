@@ -1,6 +1,5 @@
 package Application.model;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -11,8 +10,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
-
 import javax.persistence.Transient;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -23,7 +22,8 @@ public class Profile {
 	@JoinColumn(name = "id_profile")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
-
+	
+	@NotNull
 	private String name;
 
 	private int numLikes;

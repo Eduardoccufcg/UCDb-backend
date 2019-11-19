@@ -32,7 +32,8 @@ public class SwaggerConfig {
 
     private ApiInfo metaInfo() {
 
-        ApiInfo apiInfo = new ApiInfo(
+        @SuppressWarnings("rawtypes")
+		ApiInfo apiInfo = new ApiInfo(
                 "API UCDb: classificações e reviews de cursos da UFCG",
                 "Objetivo: Organizar uma plataforma colaborativa para avaliações e informações sobre disciplinas de cursos da UFCG",
                 "1.0",

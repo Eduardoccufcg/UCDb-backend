@@ -4,6 +4,8 @@ import java.util.Date;
 import java.util.List;
 
 import javax.servlet.ServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import Application.exception.ProfileNotFoundException;
@@ -19,19 +21,22 @@ import Application.repositoriesDAO.UserDAO;
 @Service
 public class CommentService {
 
-	private final ProfileDAO profileDAO;
-	private final UserDAO userDAO;
-	private final CommentDAO commentDAO;
+	@Autowired
+	private ProfileDAO profileDAO;
+
+	@Autowired
+	private UserDAO userDAO;
+
+	@Autowired
+	private CommentDAO commentDAO;
+
+	@Autowired
 	private TokenParseEmail tokenParse;
 
-	public CommentService(ProfileDAO profileDAO, UserDAO userDAO, CommentDAO commentDAO, TokenParseEmail tokenParse) {
-		this.tokenParse = tokenParse;
-		this.profileDAO = profileDAO;
-		this.userDAO = userDAO;
-		this.commentDAO = commentDAO;
+	public CommentService() {
+
 	}
 
-	/* Comentar */
 	public Comment toComment(long id, ServletRequest request, Comment comment) {
 		User user = this.userDAO.findByLogin(tokenParse.tokenParseEmail(request));
 		Profile profile = this.profileDAO.findById(id);
@@ -41,35 +46,22 @@ public class CommentService {
 		if (profile == null) {
 			throw new ProfileNotFoundException("Perfil não existe");
 		}
-
 		profile.setNumComments(profile.getNumComments() + 1);
 		comment.setProfile(profile);
 		comment.setUser(user);
 		comment.setDate(new Date());
 		comment.setDeleted(false);
 		this.commentDAO.save(comment);
-
-		List<Comment> list = commentDAO.findbyDisciplineProfile(profile);
-		for (int i = 0; i < list.size(); i++) {
-			if (list.get(i).getUser().equals(user)) {
-				list.get(i).setUserLogInComment(true);
-			} else {
-				list.get(i).setUserLogInComment(false);
-			}
-		}
-		List<Comment> l = commentDAO.findbyDisciplineProfile(profile);
-
-		profile.setComments(l);
-
+		List<Comment> CommentsList = commentDAO.findbyDisciplineProfile(profile);
+		profile.setComments(CommentsList);
 		this.profileDAO.save(profile);
+		
 		return comment;
 
 	}
-	/*
-	 * Responder um comentario
-	 */
-
+	
 	public Comment toReplyComment(long idParent, ServletRequest request, Comment comment) {
+		
 		Comment parent = commentDAO.findByIdComment(idParent);
 		comment.setDate(new Date());
 		Profile profile = parent.getProfile();
@@ -80,14 +72,7 @@ public class CommentService {
 		comment.setUser(user);
 		commentDAO.save(comment);
 		parent.getAnswers().add(comment);
-		List<Comment> list = commentDAO.findbyDisciplineProfile(profile);
-		for (int i = 0; i < list.size(); i++) {
-			if (list.get(i).getUser().equals(user)) {
-				list.get(i).setUserLogInComment(true);
-			} else {
-				list.get(i).setUserLogInComment(false);
-			}
-		}
+		profile.setNumComments(profile.getNumComments() + 1);
 		this.profileDAO.save(profile);
 		return comment;
 	}
@@ -100,21 +85,25 @@ public class CommentService {
 		}
 		comment.setDeleted(true);
 
-		deleteChildrens(comment.getAnswers());
+		int numChildrens = deleteChildrens(comment.getAnswers());
+		profile.setNumComments(profile.getNumComments() - numChildrens);
 		commentDAO.save(comment);
 		this.profileDAO.save(profile);
 		return comment;
 	}
 
-	private void deleteChildrens(List<Comment> list) {
+	private int deleteChildrens(List<Comment> list) {
 
+		int numChildrens = 0;
 		if (list.size() > 0) {
 			for (int i = 0; i < list.size(); i++) {
 				list.get(i).setDeleted(true);
+				numChildrens++;
 				deleteChildrens(list.get(i).getAnswers());
 			}
 
 		}
+		return numChildrens;
 	}
 
 }

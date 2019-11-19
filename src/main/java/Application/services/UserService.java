@@ -1,6 +1,7 @@
 package Application.services;
 
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
@@ -10,10 +11,11 @@ import Application.repositoriesDAO.UserDAO;
 @Service
 public class UserService {
 
-	private final UserDAO userDAO;
+	@Autowired
+	private UserDAO userDAO;
 
-	public UserService(UserDAO userDAO) {
-		this.userDAO = userDAO;
+	public UserService() {
+		
 	}
 
 	public User create(User user) {

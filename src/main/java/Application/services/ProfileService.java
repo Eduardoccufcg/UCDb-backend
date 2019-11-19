@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import Application.exception.ProfileNotFoundException;
 import Application.exception.UserNotFoundException;
 import Application.model.Comment;
-
 import Application.model.Profile;
 import Application.model.RankingDTO;
 import Application.model.RankingDTOList;
