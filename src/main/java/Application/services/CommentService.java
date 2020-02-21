@@ -33,10 +33,6 @@ public class CommentService {
 	@Autowired
 	private TokenParseEmail tokenParse;
 
-	public CommentService() {
-
-	}
-
 	public Comment toComment(long id, ServletRequest request, Comment comment) {
 		User user = this.userDAO.findByLogin(tokenParse.tokenParseEmail(request));
 		Profile profile = this.profileDAO.findById(id);

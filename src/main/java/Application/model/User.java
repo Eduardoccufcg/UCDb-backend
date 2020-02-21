@@ -1,6 +1,6 @@
 package Application.model;
 
-import java.util.ArrayList;
+import java.io.Serializable;
 import java.util.List;
 
 
@@ -15,16 +15,25 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "`user`")
-public class User {
+public class User implements Serializable {
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	private String email;
 
+	@NotEmpty
 	@NotNull
 	private String firstName;
+	
+	@NotEmpty
 	@NotNull
 	private String lastName;
 	
-	
+	@NotNull
 	@NotEmpty
 	private String password;
 	
@@ -37,16 +46,7 @@ public class User {
 	public User() {
 		
 	}
-
-	public User(String email,String firstName, String lastName, String password) {
-		this.comments = new ArrayList<Comment>();
-		this.setEmail(email);
-		this.setFirstName(firstName);
-		this.setLastName(lastName);
-		this.setPassword(password);
-
-	}
-
+	
 	public String getFirstName() {
 		return firstName;
 	}

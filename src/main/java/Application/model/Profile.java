@@ -1,7 +1,9 @@
 package Application.model;
 
+import java.io.Serializable;
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -16,10 +18,15 @@ import javax.validation.constraints.NotNull;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-public class Profile {
+public class Profile implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	@Id
-	@JoinColumn(name = "id_profile")
+	@Column(name = "id_profile")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 	
@@ -43,13 +50,6 @@ public class Profile {
 	public Profile() {
 
 	}
-
-	public Profile(String name) {
-
-		this.name = name;
-
-	}
-
 	public long getId() {
 		return id;
 	}
@@ -105,5 +105,56 @@ public class Profile {
 	public void setName(String name) {
 		this.name = name;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((comments == null) ? 0 : comments.hashCode());
+		result = prime * result + (int) (id ^ (id >>> 32));
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + numComments;
+		result = prime * result + numLikes;
+		result = prime * result + (userLogInLike ? 1231 : 1237);
+		result = prime * result + ((userThatGaveLike == null) ? 0 : userThatGaveLike.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Profile other = (Profile) obj;
+		if (comments == null) {
+			if (other.comments != null)
+				return false;
+		} else if (!comments.equals(other.comments))
+			return false;
+		if (id != other.id)
+			return false;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		if (numComments != other.numComments)
+			return false;
+		if (numLikes != other.numLikes)
+			return false;
+		if (userLogInLike != other.userLogInLike)
+			return false;
+		if (userThatGaveLike == null) {
+			if (other.userThatGaveLike != null)
+				return false;
+		} else if (!userThatGaveLike.equals(other.userThatGaveLike))
+			return false;
+		return true;
+	}
+	
+	
 
 }

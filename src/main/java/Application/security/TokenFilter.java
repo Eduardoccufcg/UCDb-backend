@@ -20,8 +20,10 @@ public class TokenFilter extends GenericFilterBean {
 			throws IOException, ServletException {
 
 		HttpServletRequest req = (HttpServletRequest) request;
-
-		if (req.getRequestURI().contains("/profiles/search")) {
+		
+		
+		if (req.getRequestURI().contains("/profiles/search") || req.getRequestURI().equals("/api/v1/profiles/")) {
+			
 			chain.doFilter(request, response);
 
 		} else {

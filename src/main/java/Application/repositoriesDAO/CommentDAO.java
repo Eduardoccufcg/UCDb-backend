@@ -14,7 +14,7 @@ import Application.model.Profile;
 @Repository
 public interface CommentDAO extends JpaRepository<Comment, Long> {
 
-	Comment findByIdComment(long id);
+	Comment findByIdComment(long id);	
 	
 	@SuppressWarnings("unchecked")
 	Comment save(Comment comment);

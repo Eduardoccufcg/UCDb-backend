@@ -2,6 +2,7 @@ package Application.controllers;
 
 import javax.servlet.ServletRequest;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,22 +23,17 @@ import io.swagger.annotations.ApiOperation;
 @RequestMapping({"/v1/comments"})
 public class CommentController {
 
+	@Autowired
     private CommentService commentService;
-
-    public CommentController(CommentService commentService) {
-        this.commentService = commentService;
-    }
 
     @ApiOperation(value = "Cadastra um novo comentário")
     @PostMapping(value = "/{profile}")
-    @ResponseBody
     public ResponseEntity<Comment> userComment(@PathVariable long profile, ServletRequest request, @RequestBody Comment comment) {
         return new ResponseEntity<>(this.commentService.toComment(profile, request, comment), HttpStatus.OK);
     }
 
     @ApiOperation(value = "Cadastra uma nova resposta a um comentário")
     @PostMapping(value = "/reply/{idParent}")
-    @ResponseBody
     public ResponseEntity<Comment> replyComment(@PathVariable long idParent, ServletRequest request,
                                                 @RequestBody Comment comment) {
 
@@ -46,7 +42,6 @@ public class CommentController {
 
     @ApiOperation(value = "Deleta um comentário")
     @DeleteMapping(value = "/{id}")
-    @ResponseBody
     public ResponseEntity<Comment> deleteComment(@PathVariable long id) {
         return new ResponseEntity<>(this.commentService.toDeleteComment(id), HttpStatus.OK);
     }

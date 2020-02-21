@@ -36,10 +36,6 @@ public class ProfileService {
 	@Autowired
 	private TokenParseEmail tokenParse;
 
-	public ProfileService() {
-
-	}
-
 	public Iterable<Profile> create(Iterable<Profile> profiles) {
 		return profileDAO.saveAll(profiles);
 	}

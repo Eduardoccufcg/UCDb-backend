@@ -24,18 +24,15 @@ import io.swagger.annotations.ApiOperation;
 @RestController
 @RequestMapping({ "/v1/users" })
 public class UserController {
+	
 	@Autowired
 	private EmailService emailService;
 
+	@Autowired
 	private UserService userService;
-
-	public UserController(UserService userService) {
-		this.userService = userService;
-	}
 
 	@ApiOperation(value = "Cadastra um novo usuário")
 	@PostMapping(value = "/")
-	@ResponseBody
 	public ResponseEntity<User> create(@RequestBody User user) {
 
 		if (user.password() == null | user.password().isEmpty()) {
