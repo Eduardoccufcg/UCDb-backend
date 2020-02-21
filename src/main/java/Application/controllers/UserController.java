@@ -42,12 +42,12 @@ public class UserController {
 		if (this.userService.findByLogin(user.getEmail()) != null) {
 			throw new UserAlreadyExistsException("Usuário já cadastrado");
 		}
-		try {
-			// Falta passar pra html
-			this.emailService.send("<" + user.getEmail() + ">");
-		} catch (RuntimeException e) {
-			throw new InvalidEmailException("Email Inválido");
-		}
+//		try {
+//			// Falta passar pra html
+//			this.emailService.send("<" + user.getEmail() + ">");
+//		} catch (RuntimeException e) {
+//			throw new InvalidEmailException("Email Inválido");
+//		}
 
 		return new ResponseEntity<User>(this.userService.create(user), HttpStatus.CREATED);
 	}
