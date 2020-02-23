@@ -6,7 +6,7 @@ Projeto final da disciplina Projeto de Software na Universidade Federal de Campi
 O projeto foi desenvolvido em Java, utilizando o framework Spring Boot.
 Está disponível em [https://ucdbapplication.herokuapp.com/](https://ucdbapplication.herokuapp.com/).
 
-A documentação swagger está dispónivel em [https://ucdbapplication.herokuapp.com/api/swagger-ui.html](https://ucdbapplication.herokuapp.com/api/swagger-ui.html)
+A documentação swagger está disponível em [https://ucdbapplication.herokuapp.com/api/swagger-ui.html](https://ucdbapplication.herokuapp.com/api/swagger-ui.html)
 
 A estrutura do projeto consiste:
 
@@ -15,7 +15,6 @@ A estrutura do projeto consiste:
 ---| config
 ---| controllers
 ---| exception
----| components
 ---| model
 ---| services
 ---| repositoriesDAO
