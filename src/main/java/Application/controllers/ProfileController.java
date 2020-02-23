@@ -21,11 +21,9 @@ import Application.model.Profile;
 import Application.model.RankingDTOList;
 import Application.model.SubjectDTO;
 import Application.services.ProfileService;
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
 @RestController
-@Api(value = "Controlador de Perfis")
 @RequestMapping({ "v1/profiles" })
 public class ProfileController {
 

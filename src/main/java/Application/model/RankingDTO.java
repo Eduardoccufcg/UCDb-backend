@@ -1,6 +1,13 @@
 package Application.model;
 
-public class RankingDTO {
+import java.io.Serializable;
+
+public class RankingDTO implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	private long id;
 

@@ -1,8 +1,14 @@
 package Application.model;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class RankingDTOList {
+public class RankingDTOList implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	private List<RankingDTO> rankingLikes;
 

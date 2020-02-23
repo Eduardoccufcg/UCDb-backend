@@ -16,10 +16,8 @@ import Application.services.UserService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
-@Api(value = "Controlador de Login")
 @RestController
 @RequestMapping("/v1/auth")
 public class LoginController {
