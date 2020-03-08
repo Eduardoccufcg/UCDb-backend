@@ -17,35 +17,23 @@ public class RestExceptionHandler {
 		CustomRestError errorMessage = new CustomRestError(new Date(), ex.getMessage(), request.getDescription(false));
 		return new ResponseEntity<>(errorMessage, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
 	}
-	
-	@ExceptionHandler(IncorrectPasswordException.class)
-	public ResponseEntity<CustomRestError> IncorrectPassword(Exception ex, WebRequest request) {
+
+	@ExceptionHandler({ IncorrectPasswordException.class, LoginErrorException.class, InvalidEmailException.class })
+	public ResponseEntity<CustomRestError> badRequest(Exception ex, WebRequest request) {
 		CustomRestError errorMessage = new CustomRestError(new Date(), ex.getMessage(), request.getDescription(false));
 		return new ResponseEntity<>(errorMessage, new HttpHeaders(), HttpStatus.BAD_REQUEST);
 	}
+
 	@ExceptionHandler(UserAlreadyExistsException.class)
 	public ResponseEntity<CustomRestError> UserAlready(Exception ex, WebRequest request) {
 		CustomRestError errorMessage = new CustomRestError(new Date(), ex.getMessage(), request.getDescription(false));
 		return new ResponseEntity<>(errorMessage, new HttpHeaders(), HttpStatus.CONFLICT);
 	}
-	@ExceptionHandler(UserNotFoundException.class)
-	public ResponseEntity<CustomRestError> UserNotFound(Exception ex, WebRequest request) {
+
+	@ExceptionHandler({ UserNotFoundException.class, ProfileNotFoundException.class, CommentNotFoundException.class })
+	public ResponseEntity<CustomRestError> notFound(Exception ex, WebRequest request) {
 		CustomRestError errorMessage = new CustomRestError(new Date(), ex.getMessage(), request.getDescription(false));
 		return new ResponseEntity<>(errorMessage, new HttpHeaders(), HttpStatus.NOT_FOUND);
 	}
-	
-	@ExceptionHandler(InvalidEmailException.class)
-	public ResponseEntity<CustomRestError> InvalidEmail(Exception ex, WebRequest request) {
-		CustomRestError errorMessage = new CustomRestError(new Date(), ex.getMessage(), request.getDescription(false));
-		return new ResponseEntity<>(errorMessage, new HttpHeaders(), HttpStatus.BAD_REQUEST);
-	}
-	@ExceptionHandler(ProfileNotFoundException.class)
-	public ResponseEntity<CustomRestError> ProfileNotFound(Exception ex, WebRequest request) {
-		CustomRestError errorMessage = new CustomRestError(new Date(), ex.getMessage(), request.getDescription(false));
-		return new ResponseEntity<>(errorMessage, new HttpHeaders(), HttpStatus.NOT_FOUND);
-	}
-	
-
-
 
 }
