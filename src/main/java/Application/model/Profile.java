@@ -86,7 +86,11 @@ public class Profile implements Serializable {
 	}
 
 	public int getNumLikes() {
-		return userThatGaveLike.size();
+		if( this.userThatGaveLike == null) {
+			return 0;
+		}
+		return  this.userThatGaveLike.size();
+			
 	}
 
 	public void setNumLikes(int numLikes) {
