@@ -10,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.PrePersist;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -132,7 +133,13 @@ public class Comment implements Serializable {
 	public void setParent(Comment parent) {
 		this.parent = parent;
 	}
-
+	
+	@PrePersist
+    public void prePersist(){
+        this.date = new Date();
+        this.deleted = false;
+    }
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;

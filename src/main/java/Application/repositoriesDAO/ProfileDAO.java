@@ -20,8 +20,4 @@ public interface ProfileDAO extends JpaRepository<Profile, Long> {
 	@Query(value = "SELECT p FROM Profile p ORDER BY p.numComments DESC,p.id ASC")
 	List<Profile> profileByComments();
 
-	Profile findById(long id);
-
-	@SuppressWarnings("unchecked")
-	Profile save(Profile p);
 }

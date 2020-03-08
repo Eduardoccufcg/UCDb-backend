@@ -17,30 +17,31 @@ import Application.services.CommentService;
 import io.swagger.annotations.ApiOperation;
 
 @RestController
-@RequestMapping({"/v1/comments"})
+@RequestMapping({ "/v1/comments" })
 public class CommentController {
 
 	@Autowired
-    private CommentService commentService;
+	private CommentService commentService;
 
-    @ApiOperation(value = "Cadastra um novo comentário")
-    @PostMapping(value = "/{profile}")
-    public ResponseEntity<Comment> userComment(@PathVariable long profile, ServletRequest request, @RequestBody Comment comment) {
-        return new ResponseEntity<>(this.commentService.toComment(profile, request, comment), HttpStatus.OK);
-    }
+	@ApiOperation(value = "Cadastra um novo comentário")
+	@PostMapping(value = "/{profile}")
+	public ResponseEntity<Comment> userComment(@PathVariable long profile, ServletRequest request,
+			@RequestBody Comment comment) {
+		return new ResponseEntity<>(this.commentService.toComment(profile, request, comment), HttpStatus.OK);
+	}
 
-    @ApiOperation(value = "Cadastra uma nova resposta a um comentário")
-    @PostMapping(value = "/reply/{idParent}")
-    public ResponseEntity<Comment> replyComment(@PathVariable long idParent, ServletRequest request,
-                                                @RequestBody Comment comment) {
+	@ApiOperation(value = "Cadastra uma nova resposta a um comentário")
+	@PostMapping(value = "/reply/{idParent}")
+	public ResponseEntity<Comment> replyComment(@PathVariable long idParent, ServletRequest request,
+			@RequestBody Comment comment) {
 
-        return new ResponseEntity<>(this.commentService.toReplyComment(idParent, request, comment), HttpStatus.OK);
-    }
+		return new ResponseEntity<>(this.commentService.toReplyComment(idParent, request, comment), HttpStatus.OK);
+	}
 
-    @ApiOperation(value = "Deleta um comentário")
-    @DeleteMapping(value = "/{id}")
-    public ResponseEntity<Comment> deleteComment(@PathVariable long id) {
-        return new ResponseEntity<>(this.commentService.toDeleteComment(id), HttpStatus.OK);
-    }
+	@ApiOperation(value = "Deleta um comentário")
+	@DeleteMapping(value = "/{id}")
+	public ResponseEntity<Comment> deleteComment(@PathVariable long id) {
+		return this.commentService.toDeleteComment(id);
+	}
 
 }

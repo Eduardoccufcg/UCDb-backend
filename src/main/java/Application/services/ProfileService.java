@@ -2,6 +2,7 @@ package Application.services;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.servlet.ServletRequest;
 
@@ -17,7 +18,6 @@ import Application.model.RankingDTOList;
 import Application.model.SubjectDTO;
 import Application.model.TokenParseEmail;
 import Application.model.User;
-import Application.repositoriesDAO.CommentDAO;
 import Application.repositoriesDAO.ProfileDAO;
 import Application.repositoriesDAO.UserDAO;
 
@@ -31,9 +31,6 @@ public class ProfileService {
 	private UserDAO userDAO;
 
 	@Autowired
-	private CommentDAO commentDAO;
-
-	@Autowired
 	private TokenParseEmail tokenParse;
 
 	public Iterable<Profile> create(Iterable<Profile> profiles) {
@@ -41,14 +38,17 @@ public class ProfileService {
 	}
 
 	public Profile getProfile(long id, ServletRequest request) {
-		User user = userDAO.findByLogin(tokenParse.tokenParseEmail(request));
-		Profile profile = profileDAO.findById(id);
-		if (user == null) {
+		Optional<User> userAux = this.userDAO.findById(tokenParse.tokenParseEmail(request));
+		Optional<Profile> profileAux = this.profileDAO.findById(id);
+		if (!userAux.isPresent()) {
 			throw new UserNotFoundException("Usuário não existe");
 		}
-		if (profile == null) {
+		
+		if (!profileAux.isPresent()) {
 			throw new ProfileNotFoundException("Perfil não existe");
 		}
+		Profile profile = profileAux.get();
+		User user = userAux.get();
 
 		if (profile.userThatGaveLike().contains(user)) {
 			profile.setUserLogInLike(true);
@@ -56,7 +56,7 @@ public class ProfileService {
 			profile.setUserLogInLike(false);
 		}
 
-		userLogInComment(commentDAO.findbyDisciplineProfile(profile), user);
+		userLogInComment(profile.getComments(), user);
 
 		return profileDAO.save(profile);
 	}
@@ -77,21 +77,22 @@ public class ProfileService {
 
 	public Profile toLike(ServletRequest request, long id) {
 
-		User user = userDAO.findByLogin(tokenParse.tokenParseEmail(request));
-		Profile profile = profileDAO.findById(id);
-
-		if (user == null) {
+		Optional<User> userAux = this.userDAO.findById(tokenParse.tokenParseEmail(request));
+		Optional<Profile> profileAux = this.profileDAO.findById(id);
+		if (!userAux.isPresent()) {
 			throw new UserNotFoundException("Usuário não existe");
 		}
-		if (profile == null) {
+		
+		if (!profileAux.isPresent()) {
 			throw new ProfileNotFoundException("Perfil não existe");
 		}
+		Profile profile = profileAux.get();
+		User user = userAux.get();
 		if (!profile.userThatGaveLike().contains(user)) {
 			profile.userThatGaveLike().add(user);
 		} else {
 			profile.userThatGaveLike().remove(user);
 		}
-		profile.setNumLikes(profile.userThatGaveLike().size());
 		return profileDAO.save(profile);
 
 	}

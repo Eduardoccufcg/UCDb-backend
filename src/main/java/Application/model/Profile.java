@@ -13,6 +13,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -31,9 +32,11 @@ public class Profile implements Serializable {
 	private long id;
 	
 	@NotNull
+	@NotEmpty
 	private String name;
 
 	private int numLikes;
+	
 	@JsonIgnore
 	private int numComments;
 
@@ -83,7 +86,7 @@ public class Profile implements Serializable {
 	}
 
 	public int getNumLikes() {
-		return numLikes;
+		return userThatGaveLike.size();
 	}
 
 	public void setNumLikes(int numLikes) {

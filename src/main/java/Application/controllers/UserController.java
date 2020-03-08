@@ -10,20 +10,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
 
-import Application.exception.EmptyPasswordException;
-
-import Application.exception.UserAlreadyExistsException;
-
 import Application.model.User;
 
 import Application.services.UserService;
 import io.swagger.annotations.ApiOperation;
 
-
 @RestController
 @RequestMapping({ "/v1/users" })
 public class UserController {
-	
+
 //	@Autowired
 //	private EmailService emailService;
 
@@ -34,13 +29,6 @@ public class UserController {
 	@PostMapping(value = "/")
 	public ResponseEntity<User> create(@RequestBody User user) {
 
-		if (user.password() == null | user.password().isEmpty()) {
-			throw new EmptyPasswordException("Senha inválida");
-		}
-
-		if (this.userService.findByLogin(user.getEmail()) != null) {
-			throw new UserAlreadyExistsException("Usuário já cadastrado");
-		}
 //		try {
 //			// Falta passar pra html
 //			this.emailService.send("<" + user.getEmail() + ">");

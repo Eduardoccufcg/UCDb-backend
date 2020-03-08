@@ -31,7 +31,7 @@ public class LoginController {
     public LoginResponse authenticate(@RequestBody User user) {
 
         // Recupera o usuario
-        User authUser = userService.findByLogin(user.getEmail());
+        User authUser = userService.search(user.getEmail());
 
         // verificacoes
         if (authUser == null) {
